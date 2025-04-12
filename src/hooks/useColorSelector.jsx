@@ -21,7 +21,7 @@ const defaultPalette = [
 
 const ColorSelectorContext = createContext();
 export const ColorSelectorProvider = ({ children }) => {
-  const [selectedColor, setSelectedColor] = useState(0);
+  const [selectedColor, setSelectedColor] = useState(1);
   const [colorPalette, setColorPalette] = useState(defaultPalette);
 
   const handleSelectedColorChange = (event) => {

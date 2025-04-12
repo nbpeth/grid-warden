@@ -6,8 +6,11 @@ export const useMatrix = () => {
     Array.from({ length: 8 }, () => Array(8).fill(0))
   );
 
+  const resetMatrix = () => {
+    setReplicaGrid(Array.from({ length: 8 }, () => Array(8).fill(0)));
+  };
+
   const handleCellClick = (x, y, colorId) => {
-    // console.log(x,y,color);
     setReplicaGrid((prevGrid) => {
       const newGrid = [...prevGrid];
       newGrid[y][x] = colorId;
@@ -20,5 +23,6 @@ export const useMatrix = () => {
     gridSize,
     handleCellClick,
     replicaGrid,
+    resetMatrix,
   };
 };

@@ -3,36 +3,34 @@ import { useColorSelector } from "../../hooks/useColorSelector";
 
 const emptyCellColor = "#eee";
 
+// needs factored
+// updating grid too heavy handed, poor selection and clearing critera
+
 export const Cell = ({ x, y, handleCellClick, id, replicaGrid }) => {
   const { colorPalette, selectedColor } = useColorSelector();
-
   const [isSelected, setIsSelected] = useState(false);
   const [backgroundColor, setBackgroundColor] = useState(emptyCellColor);
 
+  const colorIdForCoordinate = replicaGrid[y][x];
+  const colorValueForCoordinate =
+    colorPalette[colorIdForCoordinate - 1] ?? emptyCellColor;
+
+  const hasColorValue = !!colorIdForCoordinate;
+
   useEffect(() => {
     handleCellClick(x, y, isSelected ? selectedColor : 0);
-    setBackgroundColor(
-      isSelected ? colorPalette[selectedColor - 1] : emptyCellColor
-    );
   }, [isSelected]);
 
   useEffect(() => {
-    const colorIdForCoordinate = replicaGrid[y][x];
-    const colorValueForCoordinate = colorPalette[colorIdForCoordinate - 1] ?? emptyCellColor;
-    // console.log(
-    //   colorPalette[colorPalette.length - 1],
-    //   colorIdForCoordinate,
-    //   x,
-    //   y,
-    //   colorValueForCoordinate
-    // );
+    if (!hasColorValue) {
+      setIsSelected(false);
+    }
+
     setBackgroundColor(isSelected ? colorValueForCoordinate : emptyCellColor);
-  }, [colorPalette]);
+  }, [colorPalette, replicaGrid]);
 
   const handleClick = () => {
-    const _isSelected = !isSelected;
-
-    setIsSelected(_isSelected);
+    setIsSelected(!isSelected);
   };
 
   return (
