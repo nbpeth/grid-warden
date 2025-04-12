@@ -1,8 +1,6 @@
 import { Button, Grid, Paper } from "@mui/material";
 import React from "react";
-import { useMatrix } from "../../hooks/useMatrix";
 import { Cell } from "../cell/Cell";
-import { ColorSelector } from "../colorSelector/ColorSelector";
 import { useMatrixProvider } from "../../hooks/useMatrixProvider";
 
 export const Container = ({ children }) => {
@@ -44,21 +42,18 @@ export const Matrix = () => {
                     replicaGrid={thisMaxtrix}
                     id={cellId}
                     key={cellId}
+                    isSelected={thisMaxtrix[y][x] != 0}
                   ></Cell>
                 );
               })}
             </div>
           </Container>
         </Grid>
-        <Grid item>
-          <ColorSelector />
-        </Grid>
       </Grid>
       <Grid container item justifyContent="center">
-        <Grid item>
-          <Button variant="outlined" onClick={resetMatrix}>
-            {" "}
-            Reset{" "}
+        <Grid item xs={12}>
+          <Button variant="outlined" fullWidth={true} onClick={resetMatrix}>
+            Reset
           </Button>
         </Grid>
       </Grid>

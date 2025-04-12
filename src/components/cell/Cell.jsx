@@ -7,7 +7,7 @@ const emptyCellColor = "#444";
 // needs factored
 // updating grid too heavy handed, poor selection and clearing critera
 
-export const Cell = ({ x, y, handleCellClick, id }) => {
+export const Cell = ({ x, y, handleCellClick, id, isSelected }) => {
   const { colorPalette, selectedColor } = useColorSelector();
   const [backgroundColor, setBackgroundColor] = useState(emptyCellColor);
   const { focusedMatrix } = useMatrixProvider();
@@ -16,12 +16,8 @@ export const Cell = ({ x, y, handleCellClick, id }) => {
   const colorValueForCoordinate =
     colorPalette[colorIdForCoordinate - 1] ?? emptyCellColor;
 
-  const hasColorValue = !!colorIdForCoordinate;
-
   useEffect(() => {
-    setBackgroundColor(
-      hasColorValue ? colorValueForCoordinate : emptyCellColor
-    );
+    setBackgroundColor(isSelected ? colorValueForCoordinate : emptyCellColor);
   }, [colorPalette, focusedMatrix]);
 
   const handleClick = () => {
@@ -36,6 +32,34 @@ export const Cell = ({ x, y, handleCellClick, id }) => {
         width: "40px",
         height: "40px",
         border: "1px solid #222",
+        backgroundColor: backgroundColor,
+      }}
+    ></div>
+  );
+};
+
+export const ThumbnailCell = ({ x, y, id, i }) => {
+  const { colorPalette } = useColorSelector();
+  const [backgroundColor, setBackgroundColor] = useState(emptyCellColor);
+  const { getMatrixAtPosition, focusedMatrixIndex } = useMatrixProvider();
+  const colorIdForCoordinate = getMatrixAtPosition(i)?.[y]?.[x];
+  const colorValueForCoordinate =
+    colorPalette[colorIdForCoordinate - 1] ?? emptyCellColor;
+
+  const hasColorValue = !!colorIdForCoordinate;
+
+  useEffect(() => {
+    setBackgroundColor(
+      hasColorValue ? colorValueForCoordinate : emptyCellColor
+    );
+  }, [focusedMatrixIndex]);
+
+  return (
+    <div
+      id={id}
+      style={{
+        width: "4px",
+        height: "4px",
         backgroundColor: backgroundColor,
       }}
     ></div>

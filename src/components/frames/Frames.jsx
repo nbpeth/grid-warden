@@ -1,9 +1,49 @@
-import { Grid } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { useMatrixProvider } from "../../hooks/useMatrixProvider";
+import { ThumbnailCell } from "../cell/Cell";
+import { Container } from "../matrix/Matrix";
+
+export const ThumbNail = ({ i, gridSize }) => {
+  return (
+    <Grid container alignItems="center" justifyContent="center">
+      <Grid item>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
+            gridTemplateRows: `repeat(${gridSize}, 1fr)`,
+            gap: "6px",
+          }}
+        >
+          {Array.from({ length: gridSize * gridSize }).map((_, index) => {
+            const x = index % gridSize;
+            const y = Math.floor(index / gridSize);
+            const cellId = `thumbnailcell_${x}-${y}`;
+
+            return (
+              <ThumbnailCell
+                x={x}
+                y={y}
+                id={cellId}
+                key={cellId}
+                i={i}
+              ></ThumbnailCell>
+            );
+          })}
+        </div>
+      </Grid>
+    </Grid>
+  );
+};
 
 export const Frames = () => {
-  const { matrices, focusedMatrixIndex, handleMatrixFocusChange, pushNewMatrix } =
-    useMatrixProvider();
+  const {
+    matrices,
+    focusedMatrixIndex,
+    handleMatrixFocusChange,
+    pushNewMatrix,
+    gridSize,
+  } = useMatrixProvider();
   const isFocused = (i) => focusedMatrixIndex === i;
 
   return (
@@ -32,16 +72,18 @@ export const Frames = () => {
                 cursor: "pointer",
               }}
             >
-              {i}
+              {/* {i} */}
+              <ThumbNail i={i} gridSize={gridSize} />
             </Grid>
           );
         })}
         <Grid
           onClick={pushNewMatrix}
           item
-          justifyContent="center"
+          //   justifyContent="center"
+          justifyItems="center"
           alignContent="center"
-          alignItems="center"
+          //   alignItems="center"
           sx={{
             border: "1px dashed #aaa",
             height: "100px",
@@ -49,7 +91,7 @@ export const Frames = () => {
             cursor: "pointer",
           }}
         >
-          <div>+</div>
+          <Grid>+</Grid>
         </Grid>
       </>
     </Grid>

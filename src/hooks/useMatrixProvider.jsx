@@ -42,6 +42,7 @@ export const MatrixProvider = ({ children }) => {
     setMatrices((prev) => {
       return [...prev, generateEmptyMatrix(gridSize)];
     });
+    setFocusedMatrixIndex(matrices.length);
   };
 
   const handleMatrixFocusChange = (i) => {
@@ -52,12 +53,17 @@ export const MatrixProvider = ({ children }) => {
     return matrices?.[focusedMatrixIndex];
   };
 
+  const getMatrixAtPosition = (i) => {
+    return matrices?.[i];
+  };
+
   return (
     <MatrixContext.Provider
       value={{
         gridSize,
         focusedMatrixIndex,
         getFocusedMatrix,
+        getMatrixAtPosition,
         focusedMatrix,
 
         handleMatrixFocusChange,
