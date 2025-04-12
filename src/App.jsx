@@ -1,21 +1,37 @@
 import "./App.css";
-import { Grid } from "@mui/material";
+import {
+  AppBar,
+  CssBaseline,
+  Grid,
+  Toolbar,
+  ThemeProvider,
+  createTheme,
+} from "@mui/material";
 import { Matrix } from "./components/matrix/Matrix";
-import { ColorSelector } from "./components/colorSelector/ColorSelector";
 import { ColorSelectorProvider } from "./hooks/useColorSelector";
+
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+  },
+});
 
 const App = () => {
   return (
-    <ColorSelectorProvider>
-      <Grid container spacing={2} style={{ padding: "20px" }}>
-        <Grid item>
-          <Matrix />
+    <ThemeProvider theme={darkTheme}>
+      <ColorSelectorProvider>
+        <CssBaseline />
+        <Grid container spacing={2} style={{ padding: "20px" }}>
+          <Grid item>
+            <Matrix />
+          </Grid>
         </Grid>
-        <Grid item>
-          {/* <ColorSelector /> */}
-        </Grid>
-      </Grid>
-    </ColorSelectorProvider>
+        <AppBar position="fixed" sx={{ top: "auto", bottom: 0 }}>
+          <Toolbar>Content?</Toolbar>
+        </AppBar>
+        <Toolbar />
+      </ColorSelectorProvider>
+    </ThemeProvider>
   );
 };
 
