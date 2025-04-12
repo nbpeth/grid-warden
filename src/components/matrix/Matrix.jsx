@@ -3,6 +3,7 @@ import React from "react";
 import { useMatrix } from "../../hooks/useMatrix";
 import { Cell } from "../cell/Cell";
 import { ColorSelector } from "../colorSelector/ColorSelector";
+import { useMatrixProvider } from "../../hooks/useMatrixProvider";
 
 export const Container = ({ children }) => {
   return (
@@ -13,7 +14,9 @@ export const Container = ({ children }) => {
 };
 
 export const Matrix = () => {
-  const { handleCellClick, gridSize, replicaGrid, resetMatrix } = useMatrix();
+  const { handleCellClick, getFocusedMatrix, gridSize, resetMatrix } =
+    useMatrixProvider();
+  const thisMaxtrix = getFocusedMatrix();
 
   return (
     <Grid container direction="column">
@@ -38,7 +41,7 @@ export const Matrix = () => {
                     handleCellClick={handleCellClick}
                     x={x}
                     y={y}
-                    replicaGrid={replicaGrid}
+                    replicaGrid={thisMaxtrix}
                     id={cellId}
                     key={cellId}
                   ></Cell>
@@ -53,7 +56,10 @@ export const Matrix = () => {
       </Grid>
       <Grid container item justifyContent="center">
         <Grid item>
-          <Button variant="outlined" onClick={resetMatrix}> Reset </Button>
+          <Button variant="outlined" onClick={resetMatrix}>
+            {" "}
+            Reset{" "}
+          </Button>
         </Grid>
       </Grid>
     </Grid>

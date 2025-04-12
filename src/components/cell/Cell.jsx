@@ -1,36 +1,31 @@
 import { useEffect, useState } from "react";
 import { useColorSelector } from "../../hooks/useColorSelector";
+import { useMatrixProvider } from "../../hooks/useMatrixProvider";
 
 const emptyCellColor = "#444";
 
 // needs factored
 // updating grid too heavy handed, poor selection and clearing critera
 
-export const Cell = ({ x, y, handleCellClick, id, replicaGrid }) => {
+export const Cell = ({ x, y, handleCellClick, id }) => {
   const { colorPalette, selectedColor } = useColorSelector();
-  const [isSelected, setIsSelected] = useState(false);
   const [backgroundColor, setBackgroundColor] = useState(emptyCellColor);
+  const { focusedMatrix } = useMatrixProvider();
 
-  const colorIdForCoordinate = replicaGrid[y][x];
+  const colorIdForCoordinate = focusedMatrix?.[y]?.[x];
   const colorValueForCoordinate =
     colorPalette[colorIdForCoordinate - 1] ?? emptyCellColor;
 
   const hasColorValue = !!colorIdForCoordinate;
 
   useEffect(() => {
-    handleCellClick(x, y, isSelected ? selectedColor : 0);
-  }, [isSelected]);
-
-  useEffect(() => {
-    if (!hasColorValue) {
-      setIsSelected(false);
-    }
-
-    setBackgroundColor(isSelected ? colorValueForCoordinate : emptyCellColor);
-  }, [colorPalette, replicaGrid]);
+    setBackgroundColor(
+      hasColorValue ? colorValueForCoordinate : emptyCellColor
+    );
+  }, [colorPalette, focusedMatrix]);
 
   const handleClick = () => {
-    setIsSelected(!isSelected);
+    handleCellClick(x, y, selectedColor);
   };
 
   return (
