@@ -12,6 +12,18 @@ export const MatrixProvider = ({ children }) => {
   const [focusedMatrixIndex, setFocusedMatrixIndex] = useState(0);
   const focusedMatrix = matrices?.[focusedMatrixIndex];
 
+  const animate = async () => {
+    setFocusedMatrixIndex(0);
+    for(let i=0; i<matrices.length; i++) {
+        await new Promise((resolve) => {
+            setTimeout(() => {
+                setFocusedMatrixIndex(i)
+                resolve()
+            }, 250)
+        })
+    }
+  };
+
   const resetMatrix = () => {
     const focusedMatrix = getFocusedMatrix();
     if (!focusedMatrix) {
@@ -60,6 +72,7 @@ export const MatrixProvider = ({ children }) => {
   return (
     <MatrixContext.Provider
       value={{
+        animate,
         gridSize,
         focusedMatrixIndex,
         getFocusedMatrix,

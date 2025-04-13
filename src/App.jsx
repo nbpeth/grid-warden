@@ -10,6 +10,7 @@ import {
   // useTheme,
   Paper,
   Button,
+  Typography,
 } from "@mui/material";
 import { Matrix } from "./components/matrix/Matrix";
 import { ColorSelectorProvider } from "./hooks/useColorSelector";
@@ -42,12 +43,14 @@ const FrameBar = () => {
 };
 
 const SideBar = () => {
-  const { matrices } = useMatrixProvider();
+  const { matrices, animate } = useMatrixProvider();
   const [codeVisible, setCodeVisible] = useState(false);
 
   const handleCodeToggle = () => {
     setCodeVisible(!codeVisible);
   };
+
+  console.log(matrices);
 
   return (
     <Grid
@@ -74,9 +77,13 @@ const SideBar = () => {
                 Toggle Code
               </Button>
             </Grid>
+            <Grid item>
+              <Button variant="contained" onClick={animate}>
+                Play
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item sx={{                  overflowY: "scroll",
-}}>
+          <Grid item sx={{ overflowY: "scroll" }}>
             {codeVisible && (
               <Paper
                 elevation={6}
@@ -88,8 +95,20 @@ const SideBar = () => {
                   minWidth: "200px",
                 }}
               >
-                <pre style={{ fontSize: "xx-small", whiteSpace: "pre-wrap" }}>
-                  {JSON.stringify(matrices, null, 1)}
+                <pre
+                  style={{ whiteSpace: "pre-wrap", fontFamily: "monospace" }}
+                >
+                  {[
+                    "[",
+                    matrices
+                      .map(
+                        (m) =>
+                          "  [\n" +
+                          m.map((im) => `    [${im.join(", ")}],`).join("\n") +
+                          "\n  ],"
+                      )
+                      .join("\n") + "\n]",
+                  ].join("\n")}
                 </pre>
               </Paper>
             )}
