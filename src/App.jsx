@@ -50,8 +50,6 @@ const SideBar = () => {
     setCodeVisible(!codeVisible);
   };
 
-  console.log(matrices);
-
   return (
     <Grid
       container

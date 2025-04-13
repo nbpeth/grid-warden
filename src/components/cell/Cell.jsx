@@ -11,20 +11,18 @@ export const Cell = ({ x, y, handleCellClick, id, isSelected }) => {
   const { colorPalette, selectedColor } = useColorSelector();
   const [backgroundColor, setBackgroundColor] = useState(emptyCellColor);
   const { focusedMatrix } = useMatrixProvider();
-  const [_isSelected, setIsSelected] = useState(isSelected);
 
   const colorIdForCoordinate = focusedMatrix?.[y]?.[x];
   const colorValueForCoordinate =
     colorPalette[colorIdForCoordinate - 1] ?? emptyCellColor;
 
   useEffect(() => {
-    // console.log("is", _isSelected);
-    setBackgroundColor(_isSelected ? colorValueForCoordinate : emptyCellColor);
-  }, [colorPalette, focusedMatrix]);
+    setBackgroundColor(isSelected ? colorValueForCoordinate : emptyCellColor);
+  }, [colorPalette, focusedMatrix, isSelected]);
 
   const handleClick = () => {
-    setIsSelected(!_isSelected);
-    handleCellClick(x, y, selectedColor);
+    const giveValueIfNotPreviouslySelected = !isSelected ? selectedColor : 0;
+    handleCellClick(x, y, giveValueIfNotPreviouslySelected);
   };
 
   return (

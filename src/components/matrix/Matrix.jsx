@@ -1,5 +1,5 @@
 import { Button, Grid, Paper } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { Cell } from "../cell/Cell";
 import { useMatrixProvider } from "../../hooks/useMatrixProvider";
 
@@ -38,7 +38,7 @@ export const Matrix = () => {
                 const x = index % gridSize;
                 const y = Math.floor(index / gridSize);
                 const cellId = `cell_${x}-${y}`;
-
+                
                 return (
                   <Cell
                     handleCellClick={handleCellClick}
