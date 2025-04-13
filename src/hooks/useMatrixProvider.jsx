@@ -78,12 +78,10 @@ export const MatrixProvider = ({ children }) => {
         getFocusedMatrix,
         getMatrixAtPosition,
         focusedMatrix,
-
         handleMatrixFocusChange,
         matrices,
         handleCellClick,
         pushNewMatrix,
-
         resetMatrix,
       }}
     >

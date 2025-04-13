@@ -12,9 +12,14 @@ export const Container = ({ children }) => {
 };
 
 export const Matrix = () => {
-  const { handleCellClick, getFocusedMatrix, gridSize, resetMatrix } =
-    useMatrixProvider();
-  const thisMaxtrix = getFocusedMatrix();
+  const {
+    handleCellClick,
+    focusedMatrixIndex,
+    matrices,
+    gridSize,
+    resetMatrix,
+  } = useMatrixProvider();
+  const thisMaxtrix = matrices?.[focusedMatrixIndex];
 
   return (
     <Grid container direction="column">
