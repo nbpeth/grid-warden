@@ -72,27 +72,28 @@ export const Frames = () => {
                 cursor: "pointer",
               }}
             >
-              {/* {i} */}
               <ThumbNail i={i} gridSize={gridSize} />
             </Grid>
           );
         })}
-        <Grid
-          onClick={pushNewMatrix}
-          item
-          //   justifyContent="center"
-          justifyItems="center"
-          alignContent="center"
-          //   alignItems="center"
-          sx={{
-            border: "1px dashed #aaa",
-            height: "100px",
-            width: "100px",
-            cursor: "pointer",
-          }}
-        >
-          <Grid>+</Grid>
-        </Grid>
+        <div draggable>
+          <Grid
+            onClick={pushNewMatrix}
+            item
+            //   justifyContent="center"
+            justifyItems="center"
+            alignContent="center"
+            //   alignItems="center"
+            sx={{
+              border: "1px dashed #aaa",
+              height: "100px",
+              width: "100px",
+              cursor: "pointer",
+            }}
+          >
+            <Grid>+</Grid>
+          </Grid>
+        </div>
       </>
     </Grid>
   );

@@ -1,11 +1,13 @@
 import { Button, Grid, Paper } from "@mui/material";
-import React, { useEffect } from "react";
+import React from "react";
 import { Cell } from "../cell/Cell";
 import { useMatrixProvider } from "../../hooks/useMatrixProvider";
 
 export const Container = ({ children }) => {
   return (
-    <Paper elevation={3} style={{ padding: "25px", margin: "25px" }}>
+    <Paper elevation={3} 
+    style={{ padding: "25px", margin: "0" }}
+    >
       {children}
     </Paper>
   );

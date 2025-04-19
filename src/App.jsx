@@ -13,7 +13,10 @@ import {
   Typography,
 } from "@mui/material";
 import { Matrix } from "./components/matrix/Matrix";
-import { ColorSelectorProvider } from "./hooks/useColorSelector";
+import {
+  ColorSelectorProvider,
+  useColorSelector,
+} from "./hooks/useColorSelector";
 import { Frames } from "./components/frames/Frames";
 import { MatrixProvider, useMatrixProvider } from "./hooks/useMatrixProvider";
 import { ColorSelector } from "./components/colorSelector/ColorSelector";
@@ -42,13 +45,8 @@ const FrameBar = () => {
   );
 };
 
-const SideBar = () => {
-  const { matrices, animate } = useMatrixProvider();
-  const [codeVisible, setCodeVisible] = useState(false);
-
-  const handleCodeToggle = () => {
-    setCodeVisible(!codeVisible);
-  };
+const SideBar = ({ handleCodeToggle, handleColorCodeToggle }) => {
+  const { animate } = useMatrixProvider();
 
   return (
     <Grid
@@ -56,7 +54,7 @@ const SideBar = () => {
       item
       direction="cell"
       sx={{
-        // width: "250px",
+        width: "250px",
         position: "fixed",
         height: "100vh",
         left: 0,
@@ -64,52 +62,37 @@ const SideBar = () => {
         zIndex: 1,
       }}
     >
-      <Paper sx={{ minHeight: "100vh" }} elevation={1}>
+      <Paper sx={{ minHeight: "100vh", width: "250px" }} elevation={1}>
         <Grid container>
-          <Grid container direction="column" alignItems="center">
+          <Grid container direction="column" alignItems="center" spacing={1}>
             <Grid item>
               <ColorSelector />
             </Grid>
-            <Grid item>
-              <Button variant="contained" onClick={handleCodeToggle}>
+            <Grid item sx={{ width: "95%" }}>
+              <Button
+                fullWidth
+                color="secondary"
+                variant="outlined"
+                onClick={handleCodeToggle}
+              >
                 Toggle Code
               </Button>
             </Grid>
-            <Grid item>
-              <Button variant="contained" onClick={animate}>
+            <Grid item sx={{ width: "95%" }}>
+              <Button
+                fullWidth
+                color="warning"
+                variant="outlined"
+                onClick={handleColorCodeToggle}
+              >
+                Toggle Colors
+              </Button>
+            </Grid>
+            <Grid item sx={{ width: "95%" }}>
+              <Button fullWidth variant="outlined" onClick={animate}>
                 Play
               </Button>
             </Grid>
-          </Grid>
-          <Grid item sx={{ overflowY: "scroll" }}>
-            {codeVisible && (
-              <Paper
-                elevation={6}
-                sx={{
-                  overflowY: "scroll",
-                  // overflowX: "scroll",
-                  minHeight: "100vh",
-                  padding: "20px",
-                  minWidth: "200px",
-                }}
-              >
-                <pre
-                  style={{ whiteSpace: "pre-wrap", fontFamily: "monospace" }}
-                >
-                  {[
-                    "[",
-                    matrices
-                      .map(
-                        (m) =>
-                          "  [\n" +
-                          m.map((im) => `    [${im.join(", ")}],`).join("\n") +
-                          "\n  ],"
-                      )
-                      .join("\n") + "\n]",
-                  ].join("\n")}
-                </pre>
-              </Paper>
-            )}
           </Grid>
         </Grid>
       </Paper>
@@ -117,7 +100,122 @@ const SideBar = () => {
   );
 };
 
+export const CodeDisplay = ({ codeVisible }) => {
+  const { matrices } = useMatrixProvider();
+  // wouldn't it be nice to color code each number ?
+
+  return (
+    <Grid item>
+      {codeVisible && (
+        <Paper
+          elevation={6}
+          sx={{
+            overflowY: "scroll",
+            overflowX: "scroll",
+            maxHeight: "80vh",
+            minHeight: "80vh",
+            padding: "20px",
+            minWidth: "200px",
+          }}
+        >
+          <pre
+            style={{
+              whiteSpace: "pre-wrap",
+              fontFamily: "monospace",
+              fontSize: "x-small",
+              // color: "lightgreen",
+            }}
+          >
+            {[
+              "[",
+              matrices
+                .map(
+                  (m) =>
+                    "  [\n" +
+                    m.map((im) => `    [${im.join(", ")}],`).join("\n") +
+                    "\n  ],"
+                )
+                .join("\n") + "\n]",
+            ].join("\n")}
+          </pre>
+        </Paper>
+      )}
+    </Grid>
+  );
+};
+
+const hexToRgb = (hex) => {
+  const r = parseInt(hex.substr(1, 2), 16);
+  const g = parseInt(hex.substr(3, 2), 16);
+  const b = parseInt(hex.substr(5, 2), 16);
+  return { r, g, b };
+};
+
+export const ColorPaletteCodeDisplay = ({ colorCodeVisible }) => {
+  const { colorPalette } = useColorSelector();
+
+  const mapPaletteHexToRGB = () => {
+    return colorPalette?.map((p) => {
+      return hexToRgb(p);
+    });
+  };
+
+  // const mapRGBToHTML = () => {
+  //   return mapPaletteHexToRGB()?.map((p) => {
+  //     return JSON.stringify(p);
+  //   });
+  // };
+
+  return (
+    <Grid item>
+      {colorCodeVisible && (
+        <Paper
+          elevation={6}
+          sx={{
+            overflowY: "scroll",
+            overflowX: "scroll",
+            maxHeight: "80vh",
+            minHeight: "80vh",
+            padding: "20px",
+            minWidth: "200px",
+          }}
+        >
+          <pre
+            style={{
+              whiteSpace: "pre-wrap",
+              fontFamily: "monospace",
+              fontSize: "x-small",
+              // color: "lightgreen",
+            }}
+          >
+            {[
+              "[",
+
+              mapPaletteHexToRGB()
+                ?.map((x) => `    ${JSON.stringify(x)}`)
+                .join("\n"),
+
+              "]",
+            ].join("\n")}
+          </pre>
+        </Paper>
+      )}
+    </Grid>
+  );
+};
+
 const App = () => {
+  const [codeVisible, setCodeVisible] = useState(false);
+  const [colorCodeVisible, setColorCodeVisible] = useState(false);
+
+  const handleCodeToggle = () => {
+    setCodeVisible(!codeVisible);
+  };
+
+  const handleColorCodeToggle = () => {
+    setColorCodeVisible(!colorCodeVisible);
+  };
+
   return (
     <ThemeProvider theme={darkTheme}>
       <ColorSelectorProvider>
@@ -130,14 +228,28 @@ const App = () => {
                 marginLeft: "250px",
                 flexGrow: 1,
                 display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
+                // justifyContent: "center",
+                // justifyContent: "space-between",
                 padding: "20px",
               }}
             >
-              <SideBar />
-
-              <Matrix />
+              <SideBar
+                handleColorCodeToggle={handleColorCodeToggle}
+                handleCodeToggle={handleCodeToggle}
+              />
+              <Grid container item spacing={2}>
+                <Grid item>
+                  <Matrix />
+                </Grid>
+                <Grid item>
+                  <CodeDisplay codeVisible={codeVisible} />
+                </Grid>
+                <Grid item>
+                  <ColorPaletteCodeDisplay
+                    colorCodeVisible={colorCodeVisible}
+                  />
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
 
@@ -147,61 +259,5 @@ const App = () => {
     </ThemeProvider>
   );
 };
-
-// const App = () => {
-//   return (
-//     <ThemeProvider theme={darkTheme}>
-//       <ColorSelectorProvider>
-//         <CssBaseline />
-//         <Grid
-//           container
-//           spacing={2}
-//           justifyItems="center"
-//           // justifyContent="space-between"
-//           id="main-body"
-//           xs={12}
-//           sx={{
-//             padding: "20px",
-//             border: "1px solid green",
-//             width: "100vw", // fills entire screen width
-//             minHeight: "100vh", // optional: fill screen vertically too
-//           }}
-//         >
-//           <MatrixProvider>
-//             <Grid
-//               container
-//               item
-//               spacing={2}
-//               xs={12}
-//               sx={{ border: "1px solid red", padding: "10px", width: "100%" }}
-//             >
-//               <Grid
-//                 item
-//                 xs={4}
-//                 sx={{ border: "1px solid blue", padding: "10px" }}
-//               >
-//                 <ColorSelector />
-//               </Grid>
-
-//               <Grid
-//                 xs={8}
-//                 container
-//                 item
-//                 sx={{ border: "1px solid yellow", padding: "10px" }}
-//                 // justify="center"
-//               >
-//                 <Grid item xs={12}>
-//                   <Matrix />
-//                 </Grid>
-//               </Grid>
-//             </Grid>
-
-//             <FrameBar />
-//           </MatrixProvider>
-//         </Grid>
-//       </ColorSelectorProvider>
-//     </ThemeProvider>
-//   );
-// };
 
 export default App;

@@ -27,6 +27,8 @@ export const Cell = ({ x, y, handleCellClick, id, isSelected }) => {
 
   return (
     <div
+      draggable
+      //    onDragOver={}
       id={id}
       onClick={handleClick}
       style={{
@@ -57,6 +59,7 @@ export const ThumbnailCell = ({ x, y, id, i }) => {
 
   return (
     <div
+      draggable
       id={id}
       style={{
         width: "4px",
