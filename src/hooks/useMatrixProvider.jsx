@@ -49,7 +49,7 @@ export const MatrixProvider = ({ children }) => {
     // if (isDragging) {
     //   updatedFocusedMatrix[y][x] = colorId;
     // } else {
-      updatedFocusedMatrix[y][x] = beforeCoordinateValue === 0 ? colorId : 0;
+    updatedFocusedMatrix[y][x] = beforeCoordinateValue === 0 ? colorId : 0;
     // }
 
     updatedMatrices[focusedMatrixIndex] = updatedFocusedMatrix;
@@ -64,6 +64,19 @@ export const MatrixProvider = ({ children }) => {
     setFocusedMatrixIndex(matrices.length);
   };
 
+  const pushNewMatrixAt = (index) => {
+    const updatedMatrices = [...matrices];
+    const matrixAtIndex = updatedMatrices[index];
+    if (!matrixAtIndex) {
+      return;
+    }
+    const nextIndex = index + 1;
+    updatedMatrices.splice(nextIndex, 0, generateEmptyMatrix(gridSize));
+
+    setMatrices(updatedMatrices);
+    setFocusedMatrixIndex(nextIndex);
+  };
+
   const handleMatrixFocusChange = (i) => {
     setFocusedMatrixIndex(i);
   };
@@ -76,10 +89,38 @@ export const MatrixProvider = ({ children }) => {
     return matrices?.[i];
   };
 
+  const deleteMatrixAt = (index) => {
+    const matrixAtIndex = matrices[index];
+    if (!matrixAtIndex) {
+      return;
+    }
+
+    const updatedMatrices = [...matrices];
+    updatedMatrices.splice(index, 1);
+
+    setMatrices(updatedMatrices);
+    setFocusedMatrixIndex(index > 0 ? index - 1 : 0);
+  };
+
+  const copyMatrixAt = (index) => {
+    const updatedMatrices = [...matrices];
+    const matrixAtIndex = updatedMatrices[index];
+    if (!matrixAtIndex) {
+      return;
+    }
+    const deepCopy = matrixAtIndex.map((m) => m.slice())?.slice();
+    updatedMatrices.splice(index, 0, deepCopy);
+
+    setMatrices(updatedMatrices);
+    setFocusedMatrixIndex(index + 1);
+  };
+
   return (
     <MatrixContext.Provider
       value={{
         animate,
+        copyMatrixAt,
+        deleteMatrixAt,
         gridSize,
         focusedMatrixIndex,
         getFocusedMatrix,
@@ -89,6 +130,7 @@ export const MatrixProvider = ({ children }) => {
         matrices,
         handleCellClick,
         pushNewMatrix,
+        pushNewMatrixAt,
         resetMatrix,
       }}
     >

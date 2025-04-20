@@ -36,16 +36,24 @@ export const ThumbNail = ({ i, gridSize }) => {
   );
 };
 
+import React from "react";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add";
+
 export const Frames = () => {
   const {
     matrices,
     focusedMatrixIndex,
     handleMatrixFocusChange,
-    pushNewMatrix,
+    // pushNewMatrix,
+    pushNewMatrixAt,
+    deleteMatrixAt,
+    copyMatrixAt,
     gridSize,
   } = useMatrixProvider();
   const isFocused = (i) => focusedMatrixIndex === i;
-
+  console.log("m", matrices.length);
   return (
     <Grid
       container
@@ -59,41 +67,57 @@ export const Frames = () => {
       <>
         {matrices?.map((frame, i) => {
           return (
-            <Grid
-              onClick={() => handleMatrixFocusChange(i)}
-              item
-              justifyContent="center"
-              alignContent="center"
-              alignItems="center"
-              sx={{
-                border: isFocused(i) ? "3px solid #bbb" : "1px solid #aaa",
-                height: "100px",
-                width: "100px",
-                cursor: "pointer",
-              }}
-            >
-              <ThumbNail i={i} gridSize={gridSize} />
+            <Grid container item direction="row" spacing={1}>
+              <Grid
+                onClick={() => handleMatrixFocusChange(i)}
+                item
+                justifyContent="center"
+                alignContent="center"
+                alignItems="center"
+                sx={{
+                  border: isFocused(i) ? "3px solid #bbb" : "1px solid #aaa",
+                  height: "100px",
+                  width: "100px",
+                  cursor: "pointer",
+                }}
+                direction="row"
+              >
+                <ThumbNail i={i} gridSize={gridSize} />
+              </Grid>
+              <Grid conatiner direction="column" justifyContent="space-between">
+                <Grid item>
+                  <AddIcon
+                    fontSize="xx-small"
+                    onClick={() => pushNewMatrixAt(i)}
+                    sx={{
+                      cursor: "pointer",
+                    }}
+                  />
+                </Grid>
+                <Grid item>
+                  <ContentCopyIcon
+                    fontSize="xx-small"
+                    onClick={() => copyMatrixAt(i)}
+                    sx={{
+                      cursor: "pointer",
+                    }}
+                  />
+                </Grid>
+                {matrices?.length > 1 && (
+                  <Grid item>
+                    <DeleteIcon
+                      fontSize="xx-small"
+                      onClick={() => deleteMatrixAt(i)}
+                      sx={{
+                        cursor: "pointer",
+                      }}
+                    />
+                  </Grid>
+                )}
+              </Grid>
             </Grid>
           );
         })}
-        <div draggable>
-          <Grid
-            onClick={pushNewMatrix}
-            item
-            //   justifyContent="center"
-            justifyItems="center"
-            alignContent="center"
-            //   alignItems="center"
-            sx={{
-              border: "1px dashed #aaa",
-              height: "100px",
-              width: "100px",
-              cursor: "pointer",
-            }}
-          >
-            <Grid>+</Grid>
-          </Grid>
-        </div>
       </>
     </Grid>
   );

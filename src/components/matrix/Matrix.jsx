@@ -1,5 +1,5 @@
 import { Button, Grid, Paper } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Cell } from "../cell/Cell";
 import { useMatrixProvider } from "../../hooks/useMatrixProvider";
 import { useColorSelector } from "../../hooks/useColorSelector";
@@ -33,7 +33,6 @@ export const Matrix = () => {
 
   const handleMouseEnter = (row, col) => {
     if (isDragging) {
-      // console.log("matrix handleMouseEnter", row, col);
       selectCell(row, col);
     }
   };
@@ -49,7 +48,6 @@ export const Matrix = () => {
   };
 
   useEffect(() => {
-    // console.log("drag", isDragging, mouseDragSelectedCell);
     if (!isDragging) {
       setMouseDragSelectedCell(null);
     }
@@ -96,7 +94,7 @@ export const Matrix = () => {
                     replicaGrid={thisMaxtrix}
                     id={cellId}
                     key={cellId}
-                    isSelected={thisMaxtrix[y][x] != 0}
+                    isSelected={thisMaxtrix?.[y]?.[x] != 0}
                     handleMouseDown={handleMouseDown}
                     handleMouseEnter={handleMouseEnter}
                     handleMouseUp={handleMouseUp}
