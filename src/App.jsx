@@ -11,6 +11,7 @@ import {
   Paper,
   Button,
   Typography,
+  Tooltip,
 } from "@mui/material";
 import { Matrix } from "./components/matrix/Matrix";
 import {
@@ -20,7 +21,7 @@ import {
 import { Frames } from "./components/frames/Frames";
 import { MatrixProvider, useMatrixProvider } from "./hooks/useMatrixProvider";
 import { ColorSelector } from "./components/colorSelector/ColorSelector";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 const darkTheme = createTheme({
   palette: {
@@ -101,6 +102,15 @@ const SideBar = ({ handleCodeToggle, handleColorCodeToggle, displayState }) => {
   );
 };
 
+const copyToClipboard = (text) => {
+  navigator.clipboard
+    .writeText(text)
+    .then(() => {})
+    .catch((err) => {
+      console.error("Failed to copy: ", err);
+    });
+};
+
 export const CodeDisplay = ({ codeVisible }) => {
   const { matrices } = useMatrixProvider();
   // wouldn't it be nice to color code each number ?
@@ -119,6 +129,19 @@ export const CodeDisplay = ({ codeVisible }) => {
             minWidth: "200px",
           }}
         >
+          <Tooltip title="Copy to clipboard" arrow>
+            <ContentCopyIcon
+              onClick={() => copyToClipboard(JSON.stringify(matrices))}
+              sx={{
+                cursor: "pointer",
+                transition: "color 0.5s ease, transform 0.5s ease",
+                "&:hover": {
+                  color: "success.light",
+                  transform: "scale(1.3)",
+                },
+              }}
+            />
+          </Tooltip>
           <pre
             style={{
               whiteSpace: "pre-wrap",
@@ -151,21 +174,19 @@ const hexToRgb = (hex) => {
   const b = parseInt(hex.substr(5, 2), 16);
   return { r, g, b };
 };
-
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 export const ColorPaletteCodeDisplay = ({ colorCodeVisible }) => {
   const { colorPalette } = useColorSelector();
-
+  const [colorpaletteMappedToRGB, setColorpaletteMappedToRGB] = useState();
   const mapPaletteHexToRGB = () => {
     return colorPalette?.map((p) => {
       return hexToRgb(p);
     });
   };
 
-  // const mapRGBToHTML = () => {
-  //   return mapPaletteHexToRGB()?.map((p) => {
-  //     return JSON.stringify(p);
-  //   });
-  // };
+  useMemo(() => {
+    setColorpaletteMappedToRGB(mapPaletteHexToRGB());
+  }, [colorPalette]);
 
   return (
     <Grid item>
@@ -181,6 +202,19 @@ export const ColorPaletteCodeDisplay = ({ colorCodeVisible }) => {
             minWidth: "200px",
           }}
         >
+          <Tooltip title="Copy to clipboard" arrow>
+            <ContentCopyIcon
+              onClick={() => copyToClipboard(JSON.stringify(colorpaletteMappedToRGB))}
+              sx={{
+                cursor: "pointer",
+                transition: "color 0.5s ease, transform 0.5s ease",
+                "&:hover": {
+                  color: "success.light",
+                  transform: "scale(1.3)",
+                },
+              }}
+            />
+          </Tooltip>
           <pre
             style={{
               whiteSpace: "pre-wrap",
@@ -192,7 +226,7 @@ export const ColorPaletteCodeDisplay = ({ colorCodeVisible }) => {
             {[
               "[",
 
-              mapPaletteHexToRGB()
+              colorpaletteMappedToRGB
                 ?.map((x) => `    ${JSON.stringify(x)}`)
                 .join("\n"),
 

@@ -1,4 +1,4 @@
-import { Grid, Typography } from "@mui/material";
+import { Box, Grid, Paper, Tooltip, Typography, useTheme } from "@mui/material";
 import { useMatrixProvider } from "../../hooks/useMatrixProvider";
 import { ThumbnailCell } from "../cell/Cell";
 import { Container } from "../matrix/Matrix";
@@ -46,79 +46,115 @@ export const Frames = () => {
     matrices,
     focusedMatrixIndex,
     handleMatrixFocusChange,
-    // pushNewMatrix,
     pushNewMatrixAt,
     deleteMatrixAt,
     copyMatrixAt,
     gridSize,
   } = useMatrixProvider();
   const isFocused = (i) => focusedMatrixIndex === i;
-  console.log("m", matrices.length);
+
   return (
-    <Grid
-      container
-      sx={{ padding: "10px" }}
-      justifyContent="center"
-      justifyItems="center"
-      alignContent="center"
-      alignItems="center"
-      spacing={3}
+    <Box
+      sx={{
+        display: "flex",
+        flexWrap: "nowrap",
+        overflowX: "scroll",
+        gap: 2,
+        p: 2,
+      }}
     >
       <>
         {matrices?.map((frame, i) => {
           return (
-            <Grid container item direction="row" spacing={1}>
+            <Paper
+              key={i}
+              onClick={() => handleMatrixFocusChange(i)}
+              sx={{
+                padding: "10px",
+                display: "flex",
+                border: isFocused(i) ? "3px solid #bbb" : "1px solid #444",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+              }}
+            >
               <Grid
-                onClick={() => handleMatrixFocusChange(i)}
-                item
-                justifyContent="center"
-                alignContent="center"
+                container
+                direction="column"
+                spacing={1}
                 alignItems="center"
-                sx={{
-                  border: isFocused(i) ? "3px solid #bbb" : "1px solid #aaa",
-                  height: "100px",
-                  width: "100px",
-                  cursor: "pointer",
-                }}
-                direction="row"
               >
-                <ThumbNail i={i} gridSize={gridSize} />
-              </Grid>
-              <Grid conatiner direction="column" justifyContent="space-between">
-                <Grid item>
-                  <AddIcon
-                    fontSize="xx-small"
-                    onClick={() => pushNewMatrixAt(i)}
-                    sx={{
-                      cursor: "pointer",
-                    }}
-                  />
-                </Grid>
-                <Grid item>
-                  <ContentCopyIcon
-                    fontSize="xx-small"
-                    onClick={() => copyMatrixAt(i)}
-                    sx={{
-                      cursor: "pointer",
-                    }}
-                  />
-                </Grid>
-                {matrices?.length > 1 && (
-                  <Grid item>
-                    <DeleteIcon
-                      fontSize="xx-small"
-                      onClick={() => deleteMatrixAt(i)}
-                      sx={{
-                        cursor: "pointer",
-                      }}
-                    />
+                <Grid item container spacing={1}>
+                  <ThumbNail i={i} gridSize={gridSize} />
+
+                  <Grid
+                    conatiner
+                    item
+                    direction="column"
+                    justifyContent="space-between"
+                  >
+                    <Grid item>
+                      {/* <Tooltip title="Insert blank frame" arrow> */}
+                      <AddIcon
+                        fontSize="xx-small"
+                        onClick={() => pushNewMatrixAt(i)}
+                        sx={{
+                          cursor: "pointer",
+                          transition: "color 0.5s ease, transform 0.5s ease",
+                          "&:hover": {
+                            color: "success.dark",
+                            transform: "scale(1.5)",
+                          },
+                        }}
+                      />
+                      {/* </Tooltip> */}
+                    </Grid>
+                    <Grid item>
+                      {/* <Tooltip title="Duplicate frame" arrow> */}
+                      <ContentCopyIcon
+                        fontSize="xx-small"
+                        onClick={() => copyMatrixAt(i)}
+                        sx={{
+                          cursor: "pointer",
+                          transition: "color 0.5s ease, transform 0.5s ease",
+                          "&:hover": {
+                            color: "primary.main",
+                            transform: "scale(1.5)",
+                          },
+                        }}
+                      />
+                      {/* </Tooltip> */}
+                    </Grid>
+                    {matrices?.length > 1 && (
+                      <Grid item>
+                        {/* <Tooltip title="Delete frame" arrow> */}
+                        <DeleteIcon
+                          fontSize="xx-small"
+                          onClick={() => deleteMatrixAt(i)}
+                          sx={{
+                            cursor: "pointer",
+                            transition: "color 0.5s ease, transform 0.5s ease",
+                            "&:hover": {
+                              color: "error.dark",
+                              transform: "scale(1.5)",
+                            },
+                          }}
+                        />
+                        {/* </Tooltip> */}
+                      </Grid>
+                    )}
                   </Grid>
-                )}
+                </Grid>
+                <Grid item>
+                  <Typography variant="body2" color="textSecondary">
+                    {i}
+                  </Typography>
+                </Grid>
               </Grid>
-            </Grid>
+            </Paper>
           );
         })}
       </>
-    </Grid>
+    </Box>
   );
 };
