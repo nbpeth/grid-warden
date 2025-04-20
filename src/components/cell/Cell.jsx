@@ -27,7 +27,7 @@ export const Cell = ({ x, y, handleCellClick, id, isSelected }) => {
 
   return (
     <div
-      draggable
+      // draggable
       //    onDragOver={}
       id={id}
       onClick={handleClick}

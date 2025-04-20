@@ -45,8 +45,9 @@ const FrameBar = () => {
   );
 };
 
-const SideBar = ({ handleCodeToggle, handleColorCodeToggle }) => {
+const SideBar = ({ handleCodeToggle, handleColorCodeToggle, displayState }) => {
   const { animate } = useMatrixProvider();
+  const { colorCodeVisible, codeVisible } = displayState;
 
   return (
     <Grid
@@ -72,20 +73,20 @@ const SideBar = ({ handleCodeToggle, handleColorCodeToggle }) => {
               <Button
                 fullWidth
                 color="secondary"
-                variant="outlined"
+                variant={codeVisible ? "contained" : "outlined"}
                 onClick={handleCodeToggle}
               >
-                Toggle Code
+                Matrix JSON
               </Button>
             </Grid>
             <Grid item sx={{ width: "95%" }}>
               <Button
                 fullWidth
                 color="warning"
-                variant="outlined"
+                variant={colorCodeVisible ? "contained" : "outlined"}
                 onClick={handleColorCodeToggle}
               >
-                Toggle Colors
+                Pallete JSON
               </Button>
             </Grid>
             <Grid item sx={{ width: "95%" }}>
@@ -234,6 +235,7 @@ const App = () => {
               }}
             >
               <SideBar
+                displayState={{ codeVisible, colorCodeVisible }}
                 handleColorCodeToggle={handleColorCodeToggle}
                 handleCodeToggle={handleCodeToggle}
               />
