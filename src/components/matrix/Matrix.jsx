@@ -2,6 +2,7 @@ import { Button, Grid, Paper } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { Cell } from "../cell/Cell";
 import { useMatrixProvider } from "../../hooks/useMatrixProvider";
+import { useColorSelector } from "../../hooks/useColorSelector";
 
 export const Container = ({ children }) => {
   return (
@@ -20,56 +21,53 @@ export const Matrix = () => {
     resetMatrix,
   } = useMatrixProvider();
   const thisMaxtrix = matrices?.[focusedMatrixIndex];
-
-  const containerRef = useRef(null);
-  const [selectedItems, setSelectedItems] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
-  const [startPos, setStartPos] = useState(null);
-  const [currentBox, setCurrentBox] = useState(null);
+  const [mouseDragSelectedCell, setMouseDragSelectedCell] = useState(null);
 
-  const handleMouseDown = (e) => {
-    const rect = containerRef.current.getBoundingClientRect();
-    const start = { x: e.clientX - rect.left, y: e.clientY - rect.top };
-    setStartPos(start);
+  const { selectedColor } = useColorSelector();
+
+  const handleMouseDown = (row, col) => {
     setIsDragging(true);
+    selectCell(row, col);
   };
 
-  const handleMouseMove = (e) => {
-    if (!isDragging || !startPos) return;
-
-    const rect = containerRef.current.getBoundingClientRect();
-    const current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
-
-    const box = {
-      left: Math.min(startPos.x, current.x),
-      top: Math.min(startPos.y, current.y),
-      right: Math.max(startPos.x, current.x),
-      bottom: Math.max(startPos.y, current.y),
-    };
-    // console.log("handleMouseMove", box)
-    setCurrentBox(box);
+  const handleMouseEnter = (row, col) => {
+    if (isDragging) {
+      // console.log("matrix handleMouseEnter", row, col);
+      selectCell(row, col);
+    }
   };
-
-  
 
   const handleMouseUp = () => {
- 
+    setIsDragging(false);
+  };
+
+  const selectCell = (row, col) => {
+    const key = { x: col, y: row };
+
+    setMouseDragSelectedCell(key);
   };
 
   useEffect(() => {
-    if (isDragging) {
-      window.addEventListener("mousemove", handleMouseMove);
-      window.addEventListener("mouseup", handleMouseUp);
-    } else {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
+    // console.log("drag", isDragging, mouseDragSelectedCell);
+    if (!isDragging) {
+      setMouseDragSelectedCell(null);
     }
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
-    };
   }, [isDragging]);
+
+  useEffect(() => {
+    if (!mouseDragSelectedCell) {
+      return;
+    }
+    const { x, y } = mouseDragSelectedCell;
+    handleCellClick(x, y, selectedColor, isDragging);
+  }, [mouseDragSelectedCell]);
+
+  useEffect(() => {
+    const handleMouseUpGlobal = () => setIsDragging(false);
+    window.addEventListener("mouseup", handleMouseUpGlobal);
+    return () => window.removeEventListener("mouseup", handleMouseUpGlobal);
+  }, []);
 
   return (
     <Grid container direction="column">
@@ -77,8 +75,6 @@ export const Matrix = () => {
         <Grid item>
           <Container>
             <div
-              ref={containerRef}
-              onMouseDown={handleMouseDown}
               style={{
                 display: "grid",
                 gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
@@ -93,7 +89,7 @@ export const Matrix = () => {
 
                 return (
                   <Cell
-                    className="selectableCell"
+                    // className="selectableCell"
                     handleCellClick={handleCellClick}
                     x={x}
                     y={y}
@@ -101,6 +97,9 @@ export const Matrix = () => {
                     id={cellId}
                     key={cellId}
                     isSelected={thisMaxtrix[y][x] != 0}
+                    handleMouseDown={handleMouseDown}
+                    handleMouseEnter={handleMouseEnter}
+                    handleMouseUp={handleMouseUp}
                   ></Cell>
                 );
               })}

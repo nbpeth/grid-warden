@@ -14,13 +14,13 @@ export const MatrixProvider = ({ children }) => {
 
   const animate = async () => {
     setFocusedMatrixIndex(0);
-    for(let i=0; i<matrices.length; i++) {
-        await new Promise((resolve) => {
-            setTimeout(() => {
-                setFocusedMatrixIndex(i)
-                resolve()
-            }, 250)
-        })
+    for (let i = 0; i < matrices.length; i++) {
+      await new Promise((resolve) => {
+        setTimeout(() => {
+          setFocusedMatrixIndex(i);
+          resolve();
+        }, 250);
+      });
     }
   };
 
@@ -36,7 +36,7 @@ export const MatrixProvider = ({ children }) => {
     setMatrices(updatedMatrices);
   };
 
-  const handleCellClick = (x, y, colorId) => {
+  const handleCellClick = (x, y, colorId, isDragging) => {
     const focusedMatrix = getFocusedMatrix();
     if (!focusedMatrix) {
       return;
@@ -44,7 +44,14 @@ export const MatrixProvider = ({ children }) => {
     const updatedMatrices = [...matrices];
 
     const updatedFocusedMatrix = [...focusedMatrix];
-    updatedFocusedMatrix[y][x] = colorId;
+    const beforeCoordinateValue = updatedFocusedMatrix[y][x];
+
+    // if (isDragging) {
+    //   updatedFocusedMatrix[y][x] = colorId;
+    // } else {
+      updatedFocusedMatrix[y][x] = beforeCoordinateValue === 0 ? colorId : 0;
+    // }
+
     updatedMatrices[focusedMatrixIndex] = updatedFocusedMatrix;
 
     setMatrices(updatedMatrices);

@@ -7,7 +7,16 @@ const emptyCellColor = "#444";
 // needs factored
 // updating grid too heavy handed, poor selection and clearing critera
 
-export const Cell = ({ x, y, handleCellClick, id, isSelected }) => {
+export const Cell = ({
+  x,
+  y,
+  // handleCellClick,
+  id,
+  isSelected,
+  handleMouseDown,
+  handleMouseEnter,
+  handleMouseUp,
+}) => {
   const { colorPalette, selectedColor } = useColorSelector();
   const [backgroundColor, setBackgroundColor] = useState(emptyCellColor);
   const { focusedMatrix } = useMatrixProvider();
@@ -20,17 +29,18 @@ export const Cell = ({ x, y, handleCellClick, id, isSelected }) => {
     setBackgroundColor(isSelected ? colorValueForCoordinate : emptyCellColor);
   }, [colorPalette, focusedMatrix, isSelected]);
 
-  const handleClick = () => {
-    const giveValueIfNotPreviouslySelected = !isSelected ? selectedColor : 0;
-    handleCellClick(x, y, giveValueIfNotPreviouslySelected);
-  };
+  // const handleClick = () => {
+  //   const giveValueIfNotPreviouslySelected = !isSelected ? selectedColor : 0;
+  //   handleCellClick(x, y, giveValueIfNotPreviouslySelected);
+  // };
 
   return (
     <div
-      // draggable
-      //    onDragOver={}
+      onMouseDown={() => handleMouseDown(y, x)}
+      onMouseEnter={() => handleMouseEnter(y, x)}
+      onMouseUp={handleMouseUp}
       id={id}
-      onClick={handleClick}
+      // onClick={handleClick}
       style={{
         width: "40px",
         height: "40px",
