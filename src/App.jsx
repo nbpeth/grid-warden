@@ -47,7 +47,7 @@ const FrameBar = () => {
 };
 
 const SideBar = ({ handleCodeToggle, handleColorCodeToggle, displayState }) => {
-  const { animate } = useMatrixProvider();
+  const { animate, isAnimating } = useMatrixProvider();
   const { colorCodeVisible, codeVisible } = displayState;
 
   return (
@@ -91,9 +91,16 @@ const SideBar = ({ handleCodeToggle, handleColorCodeToggle, displayState }) => {
               </Button>
             </Grid>
             <Grid item sx={{ width: "95%" }}>
-              <Button fullWidth variant="outlined" onClick={animate}>
+              {/* {!isAnimating && ( */}
+              <Button
+                disabled={isAnimating}
+                fullWidth
+                variant="outlined"
+                onClick={animate}
+              >
                 Play
               </Button>
+              {/* )} */}
             </Grid>
           </Grid>
         </Grid>
@@ -204,7 +211,9 @@ export const ColorPaletteCodeDisplay = ({ colorCodeVisible }) => {
         >
           <Tooltip title="Copy to clipboard" arrow>
             <ContentCopyIcon
-              onClick={() => copyToClipboard(JSON.stringify(colorpaletteMappedToRGB))}
+              onClick={() =>
+                copyToClipboard(JSON.stringify(colorpaletteMappedToRGB))
+              }
               sx={{
                 cursor: "pointer",
                 transition: "color 0.5s ease, transform 0.5s ease",
@@ -263,8 +272,6 @@ const App = () => {
                 marginLeft: "250px",
                 flexGrow: 1,
                 display: "flex",
-                // justifyContent: "center",
-                // justifyContent: "space-between",
                 padding: "20px",
               }}
             >

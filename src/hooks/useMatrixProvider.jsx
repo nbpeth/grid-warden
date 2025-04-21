@@ -10,18 +10,21 @@ export const MatrixProvider = ({ children }) => {
   const [gridSize, _] = useState(8);
   const [matrices, setMatrices] = useState([generateEmptyMatrix(gridSize)]);
   const [focusedMatrixIndex, setFocusedMatrixIndex] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
   const focusedMatrix = matrices?.[focusedMatrixIndex];
 
   const animate = async () => {
     setFocusedMatrixIndex(0);
+    setIsAnimating(true);
     for (let i = 0; i < matrices.length; i++) {
       await new Promise((resolve) => {
         setTimeout(() => {
           setFocusedMatrixIndex(i);
           resolve();
-        }, 250);
+        }, 50);
       });
     }
+    setIsAnimating(false);
   };
 
   const resetMatrix = () => {
@@ -36,7 +39,7 @@ export const MatrixProvider = ({ children }) => {
     setMatrices(updatedMatrices);
   };
 
-  const handleCellClick = (x, y, colorId, isDragging) => {
+  const handleCellClick = (x, y, colorId) => {
     const focusedMatrix = getFocusedMatrix();
     if (!focusedMatrix) {
       return;
@@ -45,13 +48,7 @@ export const MatrixProvider = ({ children }) => {
 
     const updatedFocusedMatrix = [...focusedMatrix];
     const beforeCoordinateValue = updatedFocusedMatrix[y][x];
-
-    // if (isDragging) {
-    //   updatedFocusedMatrix[y][x] = colorId;
-    // } else {
     updatedFocusedMatrix[y][x] = beforeCoordinateValue === 0 ? colorId : 0;
-    // }
-
     updatedMatrices[focusedMatrixIndex] = updatedFocusedMatrix;
 
     setMatrices(updatedMatrices);
@@ -119,6 +116,7 @@ export const MatrixProvider = ({ children }) => {
     <MatrixContext.Provider
       value={{
         animate,
+        isAnimating,
         copyMatrixAt,
         deleteMatrixAt,
         gridSize,
