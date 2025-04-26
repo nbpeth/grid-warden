@@ -39,9 +39,10 @@ export const Cell = ({
       id={id}
       // onClick={handleClick}
       style={{
-        width: "40px",
-        height: "40px",
+        width: "4vw",
+        // height: "8vh",
         border: "1px solid #222",
+        aspectRatio: "1 / 1",
         backgroundColor: backgroundColor,
       }}
     ></div>

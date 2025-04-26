@@ -354,12 +354,14 @@ const App = () => {
                 handleColorCodeToggle={handleColorCodeToggle}
                 handleCodeToggle={handleCodeToggle}
               />
+
               <Grid container spacing={2} xs={12} sx={{ padding: "20px" }}>
-                <Grid item xs={6}>
+                <Grid item>
                   <Matrix />
                 </Grid>
+
                 <Grid container direction="column" sx={{ overflow: "scroll" }}>
-                  <Grid item xs={3}>
+                  <Grid item>
                     {codeVisible && <CodeDisplay />}
                   </Grid>
                   <Grid item xs={3}>
@@ -367,7 +369,9 @@ const App = () => {
                   </Grid>
                 </Grid>
               </Grid>
+
             </Grid>
+            
           </Grid>
           <FrameBar />
         </MatrixProvider>
