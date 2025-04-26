@@ -1,19 +1,71 @@
 import { Button, Grid, Paper } from "@mui/material";
-import React from "react";
-import { useMatrix } from "../../hooks/useMatrix";
+import React, { useEffect, useState } from "react";
 import { Cell } from "../cell/Cell";
-import { ColorSelector } from "../colorSelector/ColorSelector";
+import { useMatrixProvider } from "../../hooks/useMatrixProvider";
+import { useColorSelector } from "../../hooks/useColorSelector";
 
 export const Container = ({ children }) => {
   return (
-    <Paper elevation={3} style={{ padding: "25px", margin: "25px" }}>
+    <Paper elevation={3} style={{ padding: "25px", margin: "0" }}>
       {children}
     </Paper>
   );
 };
 
 export const Matrix = () => {
-  const { handleCellClick, gridSize, replicaGrid, resetMatrix } = useMatrix();
+  const {
+    handleCellClick,
+    focusedMatrixIndex,
+    matrices,
+    gridSize,
+    resetMatrix,
+  } = useMatrixProvider();
+  const thisMaxtrix = matrices?.[focusedMatrixIndex];
+  const [isDragging, setIsDragging] = useState(false);
+  const [mouseDragSelectedCell, setMouseDragSelectedCell] = useState(null);
+
+  const { selectedColor } = useColorSelector();
+
+  const handleMouseDown = (row, col) => {
+    setIsDragging(true);
+    selectCell(row, col);
+  };
+
+  const handleMouseEnter = (row, col) => {
+    if (isDragging) {
+      selectCell(row, col);
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const selectCell = (row, col) => {
+    const key = { x: col, y: row };
+
+    setMouseDragSelectedCell(key);
+  };
+
+  useEffect(() => {
+    if (!isDragging) {
+      setMouseDragSelectedCell(null);
+    }
+  }, [isDragging]);
+
+  useEffect(() => {
+    if (!mouseDragSelectedCell) {
+      return;
+    }
+    const { x, y } = mouseDragSelectedCell;
+    handleCellClick(x, y, selectedColor, isDragging);
+  }, [mouseDragSelectedCell]);
+
+  useEffect(() => {
+    const handleMouseUpGlobal = () => setIsDragging(false);
+    window.addEventListener("mouseup", handleMouseUpGlobal);
+    return () => window.removeEventListener("mouseup", handleMouseUpGlobal);
+  }, []);
 
   return (
     <Grid container direction="column">
@@ -38,22 +90,25 @@ export const Matrix = () => {
                     handleCellClick={handleCellClick}
                     x={x}
                     y={y}
-                    replicaGrid={replicaGrid}
+                    replicaGrid={thisMaxtrix}
                     id={cellId}
                     key={cellId}
+                    isSelected={thisMaxtrix?.[y]?.[x] != 0}
+                    handleMouseDown={handleMouseDown}
+                    handleMouseEnter={handleMouseEnter}
+                    handleMouseUp={handleMouseUp}
                   ></Cell>
                 );
               })}
             </div>
           </Container>
         </Grid>
-        <Grid item>
-          <ColorSelector />
-        </Grid>
       </Grid>
       <Grid container item justifyContent="center">
-        <Grid item>
-          <Button variant="outlined" onClick={resetMatrix}> Reset </Button>
+        <Grid item xs={12}>
+          <Button variant="outlined" fullWidth={true} onClick={resetMatrix}>
+            Clear
+          </Button>
         </Grid>
       </Grid>
     </Grid>

@@ -36,9 +36,14 @@ export const ColorSelectorProvider = ({ children }) => {
     });
   };
 
+  const colorHexFromPaletteForPosition = (colorCode) => {
+    return colorPalette[colorCode];
+  };
+
   return (
     <ColorSelectorContext.Provider
       value={{
+        colorHexFromPaletteForPosition,
         selectedColor,
         colorPalette,
         handleSelectedColorChange,
