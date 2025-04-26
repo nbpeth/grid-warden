@@ -1,5 +1,6 @@
-import { Box, Grid, Paper, Typography } from "@mui/material";
+import { Box, Grid, Paper, Tooltip, Typography } from "@mui/material";
 import { useMatrixProvider } from "../../hooks/useMatrixProvider";
+import ClearAllIcon from "@mui/icons-material/ClearAll";
 
 import React from "react";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
@@ -18,6 +19,7 @@ export const Frames = () => {
     deleteMatrixAt,
     copyMatrixAt,
     gridSize,
+    resetMatrix
   } = useMatrixProvider();
   const isFocused = (i) => focusedMatrixIndex === i;
 
@@ -62,7 +64,7 @@ export const Frames = () => {
                     justifyContent="space-between"
                   >
                     <Grid item>
-                      {/* <Tooltip title="Insert blank frame" arrow> */}
+                      <Tooltip title="Insert" arrow placement="right">
                       <AddIcon
                         fontSize="xx-small"
                         onClick={() => pushNewMatrixAt(i)}
@@ -75,10 +77,10 @@ export const Frames = () => {
                           },
                         }}
                       />
-                      {/* </Tooltip> */}
+                      </Tooltip>
                     </Grid>
                     <Grid item>
-                      {/* <Tooltip title="Duplicate frame" arrow> */}
+                      <Tooltip title="Duplicate" arrow placement="right">
                       <ContentCopyIcon
                         fontSize="xx-small"
                         onClick={() => copyMatrixAt(i)}
@@ -91,11 +93,27 @@ export const Frames = () => {
                           },
                         }}
                       />
-                      {/* </Tooltip> */}
+                      </Tooltip>
+                    </Grid>
+                    <Grid item>
+                      <Tooltip title="Clear" arrow placement="right">
+                      <ClearAllIcon
+                        fontSize="xx-small"
+                        onClick={() => resetMatrix(i)}
+                        sx={{
+                          cursor: "pointer",
+                          transition: "color 0.5s ease, transform 0.5s ease",
+                          "&:hover": {
+                            color: "warning.main",
+                            transform: "scale(1.5)",
+                          },
+                        }}
+                      />
+                      </Tooltip>
                     </Grid>
                     {matrices?.length > 1 && (
                       <Grid item>
-                        {/* <Tooltip title="Delete frame" arrow> */}
+                        <Tooltip title="Delete" arrow placement="right">
                         <DeleteIcon
                           fontSize="xx-small"
                           onClick={() => deleteMatrixAt(i)}
@@ -108,7 +126,7 @@ export const Frames = () => {
                             },
                           }}
                         />
-                        {/* </Tooltip> */}
+                        </Tooltip>
                       </Grid>
                     )}
                   </Grid>

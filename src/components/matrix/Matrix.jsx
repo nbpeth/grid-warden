@@ -1,4 +1,4 @@
-import { Button, Grid, Paper } from "@mui/material";
+import { Box, Button, Grid, Paper, Tooltip } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Cell } from "../cell/Cell";
 import { useMatrixProvider } from "../../hooks/useMatrixProvider";
@@ -13,13 +13,8 @@ export const Container = ({ children }) => {
 };
 
 export const Matrix = () => {
-  const {
-    handleCellClick,
-    focusedMatrixIndex,
-    matrices,
-    gridSize,
-    resetMatrix,
-  } = useMatrixProvider();
+  const { handleCellClick, focusedMatrixIndex, matrices, gridSize } =
+    useMatrixProvider();
   const thisMaxtrix = matrices?.[focusedMatrixIndex];
   const [isDragging, setIsDragging] = useState(false);
   const [mouseDragSelectedCell, setMouseDragSelectedCell] = useState(null);
@@ -102,13 +97,6 @@ export const Matrix = () => {
               })}
             </div>
           </Container>
-        </Grid>
-      </Grid>
-      <Grid container item justifyContent="center">
-        <Grid item xs={12}>
-          <Button variant="outlined" fullWidth={true} onClick={resetMatrix}>
-            Clear
-          </Button>
         </Grid>
       </Grid>
     </Grid>

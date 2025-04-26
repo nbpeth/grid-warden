@@ -12,6 +12,7 @@ import {
   Button,
   Typography,
   Tooltip,
+  Box,
 } from "@mui/material";
 import { Matrix } from "./components/matrix/Matrix";
 import {
@@ -107,19 +108,85 @@ const SideBar = ({ handleCodeToggle, handleColorCodeToggle, displayState }) => {
   );
 };
 
-const copyToClipboard = (text) => {
-  navigator.clipboard
-    .writeText(text)
-    .then(() => {})
-    .catch((err) => {
-      console.error("Failed to copy: ", err);
-    });
+export const CopyContentButton = ({ data }) => {
+  const [checkitychecked, setCheckitychecked] = useState(false);
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        setCheckitychecked(true);
+        setTimeout(() => {
+          setCheckitychecked(false);
+        }, 2000);
+      })
+      .catch((err) => {
+        console.error("Failed to copy: ", err);
+      });
+  };
+
+  return (
+    <Box
+      sx={{
+        position: "relative",
+        width: "32px",
+        height: "32px",
+        display: "inline-block",
+      }}
+    >
+      <Box
+        onClick={() => copyToClipboard(data)}
+        sx={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: checkitychecked ? "default" : "pointer",
+          opacity: checkitychecked ? 0 : 1,
+          transform: checkitychecked ? "scale(0.5)" : "scale(1)",
+          transition: "opacity 0.5s ease, transform 0.5s ease, color 0.5s ease",
+          color: "text.primary",
+          "&:hover": {
+            color: checkitychecked ? "text.primary" : "success.dark",
+          },
+          pointerEvents: checkitychecked ? "none" : "auto",
+        }}
+      > <Tooltip title="Copy Raw JSON" arrow placement="right">
+        <ContentCopyIcon sx={{ fontSize: "1.5rem" }} />
+        </Tooltip>
+      </Box>
+
+      <Box
+        sx={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: "1.5rem",
+          opacity: checkitychecked ? 1 : 0,
+          transform: checkitychecked ? "scale(1)" : "scale(0.5)",
+          transition: "opacity 0.5s ease, transform 0.5s ease",
+          pointerEvents: checkitychecked ? "auto" : "none",
+        }}
+      >
+        ✅
+      </Box>
+    </Box>
+  );
 };
 
 export const CodeDisplay = () => {
   const { matrices } = useMatrixProvider();
   const { colorHexFromPaletteForPosition } = useColorSelector();
-  // wouldn't it be nice to color code each number ?
+
   const chunk = (arr, size) =>
     Array.from({ length: Math.ceil(arr.length / size) }, (_, i) =>
       arr.slice(i * size, i * size + size)
@@ -135,17 +202,7 @@ export const CodeDisplay = () => {
         overflow: "auto",
       }}
     >
-      <ContentCopyIcon
-        onClick={() => copyToClipboard(JSON.stringify(matrices))}
-        sx={{
-          cursor: "pointer",
-          transition: "color 0.5s ease, transform 0.5s ease",
-          "&:hover": {
-            color: "success.dark",
-            transform: "scale(1.5)",
-          },
-        }}
-      />
+      <CopyContentButton data={JSON.stringify(matrices)} />
       <pre style={{ fontSize: "x-small" }}>
         {chunk(matrices, 3).map((matricesRow, rowIndex) => (
           <Grid
@@ -154,19 +211,16 @@ export const CodeDisplay = () => {
             key={"row" + rowIndex}
             sx={{ marginBottom: 1 }}
           >
+            
             {matricesRow.map((matrix, mIndex) => (
               <Grid item xs={4} key={"m-" + mIndex}>
                 <Grid container direction="column" spacing={0}>
                   {matrix?.map((line, lineIndex) => {
-                    // return JSON.stringify(line) + "\n"
-
                     return (
                       <Grid item key={"line" + lineIndex}>
                         <Typography
                           sx={{
                             key: `openbracket-${rowIndex}-${mIndex}-${lineIndex}`,
-
-                            // color: colorHexFromPaletteForPosition(i - 1),
                             fontWeight: "bold",
                             display: "inline",
                             mr: 1,
@@ -241,28 +295,16 @@ export const ColorPaletteCodeDisplay = () => {
         overflow: "auto",
       }}
     >
-      <ContentCopyIcon
-        onClick={() => copyToClipboard(JSON.stringify(colorpaletteMappedToRGB))}
-        sx={{
-          cursor: "pointer",
-          transition: "color 0.5s ease, transform 0.5s ease",
-          "&:hover": {
-            color: "success.dark",
-            transform: "scale(1.5)",
-          },
-        }}
-      />
+      <CopyContentButton data={JSON.stringify(colorpaletteMappedToRGB)} />
       <Grid container item>
         <pre style={{ fontSize: "x-small" }}>
           <Grid container item direction="column">
-            
             {colorpaletteMappedToRGB?.map((l, i) => {
               return (
                 <Grid item>
                   <Typography
                     sx={{
                       key: `rgbColorCode-${i}`,
-                      // color: colorHexFromPaletteForPosition(i - 1),
                       fontWeight: "bold",
                       display: "inline",
                       mr: 1,
