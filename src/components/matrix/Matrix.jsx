@@ -87,7 +87,6 @@ export const Matrix = () => {
 
                 return (
                   <Cell
-                    // className="selectableCell"
                     handleCellClick={handleCellClick}
                     x={x}
                     y={y}
@@ -108,7 +107,7 @@ export const Matrix = () => {
       <Grid container item justifyContent="center">
         <Grid item xs={12}>
           <Button variant="outlined" fullWidth={true} onClick={resetMatrix}>
-            Reset
+            Clear
           </Button>
         </Grid>
       </Grid>

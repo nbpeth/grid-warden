@@ -64,7 +64,7 @@ const SideBar = ({ handleCodeToggle, handleColorCodeToggle, displayState }) => {
         zIndex: 1,
       }}
     >
-      <Paper sx={{ minHeight: "100vh", width: "250px" }} elevation={1}>
+      <Paper sx={{ minHeight: "100vh", width: "20vw" }} elevation={1}>
         <Grid container>
           <Grid container direction="column" alignItems="center" spacing={1}>
             <Grid item>
@@ -91,7 +91,6 @@ const SideBar = ({ handleCodeToggle, handleColorCodeToggle, displayState }) => {
               </Button>
             </Grid>
             <Grid item sx={{ width: "95%" }}>
-              {/* {!isAnimating && ( */}
               <Button
                 disabled={isAnimating}
                 fullWidth
@@ -100,7 +99,6 @@ const SideBar = ({ handleCodeToggle, handleColorCodeToggle, displayState }) => {
               >
                 Play
               </Button>
-              {/* )} */}
             </Grid>
           </Grid>
         </Grid>
@@ -118,60 +116,97 @@ const copyToClipboard = (text) => {
     });
 };
 
-export const CodeDisplay = ({ codeVisible }) => {
+export const CodeDisplay = () => {
   const { matrices } = useMatrixProvider();
+  const { colorHexFromPaletteForPosition } = useColorSelector();
   // wouldn't it be nice to color code each number ?
+  const chunk = (arr, size) =>
+    Array.from({ length: Math.ceil(arr.length / size) }, (_, i) =>
+      arr.slice(i * size, i * size + size)
+    );
 
   return (
-    <Grid item>
-      {codeVisible && (
-        <Paper
-          elevation={6}
-          sx={{
-            overflowY: "scroll",
-            overflowX: "scroll",
-            maxHeight: "80vh",
-            minHeight: "80vh",
-            padding: "20px",
-            minWidth: "200px",
-          }}
-        >
-          <Tooltip title="Copy to clipboard" arrow>
-            <ContentCopyIcon
-              onClick={() => copyToClipboard(JSON.stringify(matrices))}
-              sx={{
-                cursor: "pointer",
-                transition: "color 0.5s ease, transform 0.5s ease",
-                "&:hover": {
-                  color: "success.light",
-                  transform: "scale(1.3)",
-                },
-              }}
-            />
-          </Tooltip>
-          <pre
-            style={{
-              whiteSpace: "pre-wrap",
-              fontFamily: "monospace",
-              fontSize: "x-small",
-              // color: "lightgreen",
-            }}
+    <Paper
+      elevation={1}
+      sx={{
+        padding: "10px",
+        maxHeight: "40vh",
+        minWidth: "25vw",
+        overflow: "auto",
+      }}
+    >
+      <ContentCopyIcon
+        onClick={() => copyToClipboard(JSON.stringify(matrices))}
+        sx={{
+          cursor: "pointer",
+          transition: "color 0.5s ease, transform 0.5s ease",
+          "&:hover": {
+            color: "success.dark",
+            transform: "scale(1.5)",
+          },
+        }}
+      />
+      <pre style={{ fontSize: "x-small" }}>
+        {chunk(matrices, 3).map((matricesRow, rowIndex) => (
+          <Grid
+            container
+            spacing={1}
+            key={"row" + rowIndex}
+            sx={{ marginBottom: 1 }}
           >
-            {[
-              "[",
-              matrices
-                .map(
-                  (m) =>
-                    "  [\n" +
-                    m.map((im) => `    [${im.join(", ")}],`).join("\n") +
-                    "\n  ],"
-                )
-                .join("\n") + "\n]",
-            ].join("\n")}
-          </pre>
-        </Paper>
-      )}
-    </Grid>
+            {matricesRow.map((matrix, mIndex) => (
+              <Grid item xs={4} key={"m-" + mIndex}>
+                <Grid container direction="column" spacing={0}>
+                  {matrix?.map((line, lineIndex) => {
+                    // return JSON.stringify(line) + "\n"
+
+                    return (
+                      <Grid item key={"line" + lineIndex}>
+                        <Typography
+                          sx={{
+                            key: `openbracket-${rowIndex}-${mIndex}-${lineIndex}`,
+
+                            // color: colorHexFromPaletteForPosition(i - 1),
+                            fontWeight: "bold",
+                            display: "inline",
+                            mr: 1,
+                          }}
+                        >
+                          [
+                        </Typography>
+                        {line.map((i, itemIndex) => (
+                          <Typography
+                            key={`point-${rowIndex}-${mIndex}-${lineIndex}-${itemIndex}`}
+                            sx={{
+                              color: colorHexFromPaletteForPosition(i - 1),
+                              fontWeight: "bold",
+                              display: "inline",
+                              mr: 1,
+                            }}
+                          >
+                            {i},
+                          </Typography>
+                        ))}
+                        <Typography
+                          sx={{
+                            key: `endbracket-${rowIndex}-${mIndex}-${lineIndex}`,
+                            fontWeight: "bold",
+                            display: "inline",
+                            mr: 1,
+                          }}
+                        >
+                          ]
+                        </Typography>
+                      </Grid>
+                    );
+                  })}
+                </Grid>
+              </Grid>
+            ))}
+          </Grid>
+        ))}
+      </pre>
+    </Paper>
   );
 };
 
@@ -181,8 +216,9 @@ const hexToRgb = (hex) => {
   const b = parseInt(hex.substr(5, 2), 16);
   return { r, g, b };
 };
+
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-export const ColorPaletteCodeDisplay = ({ colorCodeVisible }) => {
+export const ColorPaletteCodeDisplay = () => {
   const { colorPalette } = useColorSelector();
   const [colorpaletteMappedToRGB, setColorpaletteMappedToRGB] = useState();
   const mapPaletteHexToRGB = () => {
@@ -196,61 +232,57 @@ export const ColorPaletteCodeDisplay = ({ colorCodeVisible }) => {
   }, [colorPalette]);
 
   return (
-    <Grid item>
-      {colorCodeVisible && (
-        <Paper
-          elevation={6}
-          sx={{
-            overflowY: "scroll",
-            overflowX: "scroll",
-            maxHeight: "80vh",
-            minHeight: "80vh",
-            padding: "20px",
-            minWidth: "200px",
-          }}
-        >
-          <Tooltip title="Copy to clipboard" arrow>
-            <ContentCopyIcon
-              onClick={() =>
-                copyToClipboard(JSON.stringify(colorpaletteMappedToRGB))
-              }
-              sx={{
-                cursor: "pointer",
-                transition: "color 0.5s ease, transform 0.5s ease",
-                "&:hover": {
-                  color: "success.light",
-                  transform: "scale(1.3)",
-                },
-              }}
-            />
-          </Tooltip>
-          <pre
-            style={{
-              whiteSpace: "pre-wrap",
-              fontFamily: "monospace",
-              fontSize: "x-small",
-              // color: "lightgreen",
-            }}
-          >
-            {[
-              "[",
-
-              colorpaletteMappedToRGB
-                ?.map((x) => `    ${JSON.stringify(x)}`)
-                .join("\n"),
-
-              "]",
-            ].join("\n")}
-          </pre>
-        </Paper>
-      )}
-    </Grid>
+    <Paper
+      elevation={1}
+      sx={{
+        padding: "10px",
+        maxHeight: "20vh",
+        minWidth: "25vw",
+        overflow: "auto",
+      }}
+    >
+      <ContentCopyIcon
+        onClick={() => copyToClipboard(JSON.stringify(colorpaletteMappedToRGB))}
+        sx={{
+          cursor: "pointer",
+          transition: "color 0.5s ease, transform 0.5s ease",
+          "&:hover": {
+            color: "success.dark",
+            transform: "scale(1.5)",
+          },
+        }}
+      />
+      <Grid container item>
+        <pre style={{ fontSize: "x-small" }}>
+          <Grid container item direction="column">
+            
+            {colorpaletteMappedToRGB?.map((l, i) => {
+              return (
+                <Grid item>
+                  <Typography
+                    sx={{
+                      key: `rgbColorCode-${i}`,
+                      // color: colorHexFromPaletteForPosition(i - 1),
+                      fontWeight: "bold",
+                      display: "inline",
+                      mr: 1,
+                    }}
+                  >
+                    {JSON.stringify(l)},
+                  </Typography>
+                </Grid>
+              );
+            })}
+          </Grid>
+        </pre>
+      </Grid>
+    </Paper>
   );
 };
 
 const App = () => {
-  const [codeVisible, setCodeVisible] = useState(false);
-  const [colorCodeVisible, setColorCodeVisible] = useState(false);
+  const [codeVisible, setCodeVisible] = useState(true);
+  const [colorCodeVisible, setColorCodeVisible] = useState(true);
 
   const handleCodeToggle = () => {
     setCodeVisible(!codeVisible);
@@ -280,22 +312,21 @@ const App = () => {
                 handleColorCodeToggle={handleColorCodeToggle}
                 handleCodeToggle={handleCodeToggle}
               />
-              <Grid container item spacing={2}>
-                <Grid item>
+              <Grid container spacing={2} xs={12} sx={{ padding: "20px" }}>
+                <Grid item xs={6}>
                   <Matrix />
                 </Grid>
-                <Grid item>
-                  <CodeDisplay codeVisible={codeVisible} />
-                </Grid>
-                <Grid item>
-                  <ColorPaletteCodeDisplay
-                    colorCodeVisible={colorCodeVisible}
-                  />
+                <Grid container direction="column" sx={{ overflow: "scroll" }}>
+                  <Grid item xs={3}>
+                    {codeVisible && <CodeDisplay />}
+                  </Grid>
+                  <Grid item xs={3}>
+                    {colorCodeVisible && <ColorPaletteCodeDisplay />}
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
-
           <FrameBar />
         </MatrixProvider>
       </ColorSelectorProvider>

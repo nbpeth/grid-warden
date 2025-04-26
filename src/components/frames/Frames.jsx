@@ -1,45 +1,13 @@
-import { Box, Grid, Paper, Tooltip, Typography, useTheme } from "@mui/material";
+import { Box, Grid, Paper, Typography } from "@mui/material";
 import { useMatrixProvider } from "../../hooks/useMatrixProvider";
-import { ThumbnailCell } from "../cell/Cell";
-import { Container } from "../matrix/Matrix";
-
-export const ThumbNail = ({ i, gridSize }) => {
-  return (
-    <Grid container alignItems="center" justifyContent="center">
-      <Grid item>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
-            gridTemplateRows: `repeat(${gridSize}, 1fr)`,
-            gap: "6px",
-          }}
-        >
-          {Array.from({ length: gridSize * gridSize }).map((_, index) => {
-            const x = index % gridSize;
-            const y = Math.floor(index / gridSize);
-            const cellId = `thumbnailcell_${x}-${y}`;
-
-            return (
-              <ThumbnailCell
-                x={x}
-                y={y}
-                id={cellId}
-                key={cellId}
-                i={i}
-              ></ThumbnailCell>
-            );
-          })}
-        </div>
-      </Grid>
-    </Grid>
-  );
-};
 
 import React from "react";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
+import { ThumbNail } from "../thumbnail/Thumbnail";
+
+// todo: drag and reorder frames
 
 export const Frames = () => {
   const {
