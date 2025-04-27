@@ -21,7 +21,7 @@ export const ThumbnailCell = ({ x, y, id, i }) => {
 
   return (
     <div
-      draggable
+      // draggable
       id={id}
       style={{
         width: "4px",

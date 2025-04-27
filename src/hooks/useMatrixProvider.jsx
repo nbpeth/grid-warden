@@ -27,6 +27,17 @@ export const MatrixProvider = ({ children }) => {
     setIsAnimating(false);
   };
 
+  const swapMatrixPositions = (i, n) => {
+    const source = matrices[i];
+    const destination = matrices[n];
+
+    const tempMatrix = [...matrices];
+    tempMatrix[i] = destination;
+    tempMatrix[n] = source;
+
+    setMatrices(tempMatrix);
+  };
+
   const resetMatrix = () => {
     const focusedMatrix = getFocusedMatrix();
     if (!focusedMatrix) {
@@ -130,6 +141,7 @@ export const MatrixProvider = ({ children }) => {
         pushNewMatrix,
         pushNewMatrixAt,
         resetMatrix,
+        swapMatrixPositions,
       }}
     >
       {children}

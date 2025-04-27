@@ -3,9 +3,10 @@ import { ThumbnailCell } from "../thumbnailCell/ThumbnailCell";
 
 export const ThumbNail = ({ i, gridSize }) => {
   return (
-    <Grid container alignItems="center" justifyContent="center">
+    <Grid container alignItems="center" justifyContent="center" >
       <Grid item>
         <div
+        
           style={{
             display: "grid",
             gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
@@ -20,6 +21,7 @@ export const ThumbNail = ({ i, gridSize }) => {
 
             return (
               <ThumbnailCell
+              
                 x={x}
                 y={y}
                 id={cellId}
