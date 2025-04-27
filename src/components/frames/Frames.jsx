@@ -1,4 +1,12 @@
-import { Box, Grid, Paper, Tooltip, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  Divider,
+  Grid,
+  Paper,
+  Tooltip,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { useMatrixProvider } from "../../hooks/useMatrixProvider";
 import ClearAllIcon from "@mui/icons-material/ClearAll";
 
@@ -75,15 +83,7 @@ export const Frames = () => {
       <>
         {matrices?.map((frame, i) => {
           return (
-            <div
-              id={`frame-${i}`}
-              draggable
-              onDrop={handleDrop}
-              onDragEnd={handleDragEnd}
-              onDragStart={handleDragStart}
-              onDragOver={handleDragOver}
-              onDragEnter={handleDragEnter}
-            >
+            <>
               <Paper
                 key={i}
                 onClick={() => handleMatrixFocusChange(i)}
@@ -96,101 +96,123 @@ export const Frames = () => {
                   flexShrink: 0,
                 }}
               >
-                <Grid
-                  container
-                  direction="column"
-                  spacing={1}
-                  alignItems="center"
+                <div
+                  id={`frame-${i}`}
+                  draggable
+                  onDrop={handleDrop}
+                  onDragEnd={handleDragEnd}
+                  onDragStart={handleDragStart}
+                  onDragOver={handleDragOver}
+                  onDragEnter={handleDragEnter}
                 >
-                  <Grid item container spacing={1}>
-                    <ThumbNail i={i} gridSize={gridSize} />
+                  <Grid
+                    container
+                    direction="column"
+                    spacing={1}
+                    alignItems="center"
+                  >
+                    <Grid item container spacing={1}>
+                      <ThumbNail i={i} gridSize={gridSize} />
 
-                    <Grid
-                      conatiner
-                      item
-                      direction="column"
-                      justifyContent="space-between"
-                    >
-                      <Grid item>
-                        <Tooltip title="Insert" arrow placement="right">
-                          <AddIcon
-                            fontSize="xx-small"
-                            onClick={() => pushNewMatrixAt(i)}
-                            sx={{
-                              cursor: "pointer",
-                              transition:
-                                "color 0.5s ease, transform 0.5s ease",
-                              "&:hover": {
-                                color: "success.dark",
-                                transform: "scale(1.5)",
-                              },
-                            }}
-                          />
-                        </Tooltip>
-                      </Grid>
-                      <Grid item>
-                        <Tooltip title="Duplicate" arrow placement="right">
-                          <ContentCopyIcon
-                            fontSize="xx-small"
-                            onClick={() => copyMatrixAt(i)}
-                            sx={{
-                              cursor: "pointer",
-                              transition:
-                                "color 0.5s ease, transform 0.5s ease",
-                              "&:hover": {
-                                color: "primary.main",
-                                transform: "scale(1.5)",
-                              },
-                            }}
-                          />
-                        </Tooltip>
-                      </Grid>
-                      <Grid item>
-                        <Tooltip title="Clear" arrow placement="right">
-                          <ClearAllIcon
-                            fontSize="xx-small"
-                            onClick={() => resetMatrix(i)}
-                            sx={{
-                              cursor: "pointer",
-                              transition:
-                                "color 0.5s ease, transform 0.5s ease",
-                              "&:hover": {
-                                color: "warning.main",
-                                transform: "scale(1.5)",
-                              },
-                            }}
-                          />
-                        </Tooltip>
-                      </Grid>
-                      {matrices?.length > 1 && (
+                      <Grid
+                        conatiner
+                        item
+                        direction="column"
+                        justifyContent="space-between"
+                      >
                         <Grid item>
-                          <Tooltip title="Delete" arrow placement="right">
-                            <DeleteIcon
+                          <Tooltip title="Insert" arrow placement="right">
+                            <AddIcon
                               fontSize="xx-small"
-                              onClick={() => deleteMatrixAt(i)}
+                              onClick={() => pushNewMatrixAt(i)}
                               sx={{
                                 cursor: "pointer",
                                 transition:
                                   "color 0.5s ease, transform 0.5s ease",
                                 "&:hover": {
-                                  color: "error.dark",
+                                  color: "success.dark",
                                   transform: "scale(1.5)",
                                 },
                               }}
                             />
                           </Tooltip>
                         </Grid>
-                      )}
+                        <Grid item>
+                          <Tooltip title="Duplicate" arrow placement="right">
+                            <ContentCopyIcon
+                              fontSize="xx-small"
+                              onClick={() => copyMatrixAt(i)}
+                              sx={{
+                                cursor: "pointer",
+                                transition:
+                                  "color 0.5s ease, transform 0.5s ease",
+                                "&:hover": {
+                                  color: "primary.main",
+                                  transform: "scale(1.5)",
+                                },
+                              }}
+                            />
+                          </Tooltip>
+                        </Grid>
+                        <Grid item>
+                          <Tooltip title="Clear" arrow placement="right">
+                            <ClearAllIcon
+                              fontSize="xx-small"
+                              onClick={() => resetMatrix(i)}
+                              sx={{
+                                cursor: "pointer",
+                                transition:
+                                  "color 0.5s ease, transform 0.5s ease",
+                                "&:hover": {
+                                  color: "warning.main",
+                                  transform: "scale(1.5)",
+                                },
+                              }}
+                            />
+                          </Tooltip>
+                        </Grid>
+                        {matrices?.length > 1 && (
+                          <Grid item>
+                            <Tooltip title="Delete" arrow placement="right">
+                              <DeleteIcon
+                                fontSize="xx-small"
+                                onClick={() => deleteMatrixAt(i)}
+                                sx={{
+                                  cursor: "pointer",
+                                  transition:
+                                    "color 0.5s ease, transform 0.5s ease",
+                                  "&:hover": {
+                                    color: "error.dark",
+                                    transform: "scale(1.5)",
+                                  },
+                                }}
+                              />
+                            </Tooltip>
+                          </Grid>
+                        )}
+                        {matrices?.length < 2 && (
+                          <Grid item>
+                            <DeleteIcon fontSize="xx-small" />
+                          </Grid>
+                        )}
+                      </Grid>
+                    </Grid>
+
+                    <Grid item>
+                      <Typography variant="body2" color="textSecondary">
+                        {i}
+                      </Typography>
                     </Grid>
                   </Grid>
-                  <Grid item>
-                    <Typography variant="body2" color="textSecondary">
-                      {i}
-                    </Typography>
-                  </Grid>
-                </Grid>
+                </div>
               </Paper>
-            </div>
+              {/* <Divider
+                id={`divider-${i + 1}`}
+                orientation="vertical"
+                variant="middle"
+                flexItem
+              /> */}
+            </>
           );
         })}
       </>

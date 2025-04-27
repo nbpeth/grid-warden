@@ -37,7 +37,7 @@ const FrameBar = () => {
         sx={{
           top: "auto",
           bottom: 0,
-          height: "150px",
+          height: "200px",
           overflowX: "scroll",
         }}
       >
@@ -339,7 +339,7 @@ const App = () => {
       <ColorSelectorProvider>
         <CssBaseline />
         <MatrixProvider>
-          <Grid container sx={{ minHeight: "100vh", width: "100vw" }}>
+          <Grid spacontainer sx={{ minHeight: "100vh", width: "100vw" }}>
             <Grid
               item
               sx={{
