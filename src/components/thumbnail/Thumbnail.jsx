@@ -21,7 +21,6 @@ export const ThumbNail = ({ i, gridSize }) => {
 
             return (
               <ThumbnailCell
-              
                 x={x}
                 y={y}
                 id={cellId}

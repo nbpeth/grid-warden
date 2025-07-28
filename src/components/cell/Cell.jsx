@@ -7,7 +7,6 @@ export const emptyCellColor = "#444";
 export const Cell = ({
   x,
   y,
-  // handleCellClick,
   id,
   isSelected,
   handleMouseDown,
@@ -19,6 +18,7 @@ export const Cell = ({
   const { focusedMatrix } = useMatrixProvider();
 
   const colorIdForCoordinate = focusedMatrix?.[y]?.[x];
+
   const colorValueForCoordinate =
     colorPalette[colorIdForCoordinate - 1] ?? emptyCellColor;
 
@@ -26,10 +26,6 @@ export const Cell = ({
     setBackgroundColor(isSelected ? colorValueForCoordinate : emptyCellColor);
   }, [colorPalette, focusedMatrix, isSelected]);
 
-  // const handleClick = () => {
-  //   const giveValueIfNotPreviouslySelected = !isSelected ? selectedColor : 0;
-  //   handleCellClick(x, y, giveValueIfNotPreviouslySelected);
-  // };
 
   return (
     <div
@@ -37,7 +33,6 @@ export const Cell = ({
       onMouseEnter={() => handleMouseEnter(y, x)}
       onMouseUp={handleMouseUp}
       id={id}
-      // onClick={handleClick}
       style={{
         width: "4vw",
         // height: "8vh",

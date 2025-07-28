@@ -8,10 +8,12 @@ const generateEmptyMatrix = (gridSize) => {
 
 export const MatrixProvider = ({ children }) => {
   const [gridSize, _] = useState(8);
-  const [matrices, setMatrices] = useState([generateEmptyMatrix(gridSize)]);
+
+  const [matrices, setMatrices] = useState({id: undefined, data: [generateEmptyMatrix(gridSize)]});
+
   const [focusedMatrixIndex, setFocusedMatrixIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
-  const focusedMatrix = matrices?.[focusedMatrixIndex];
+  const focusedMatrix = matrices?.data?.[focusedMatrixIndex];
 
   const animate = async () => {
     setFocusedMatrixIndex(0);
@@ -27,13 +29,27 @@ export const MatrixProvider = ({ children }) => {
     setIsAnimating(false);
   };
 
-  const swapMatrixPositions = (i, n) => {
-    const source = matrices[i];
-    const destination = matrices[n];
+  const setMatricesProperties = ({id, projectName, username}) => {
+    setMatrices((prev) => {
+      return {...prev, id, projectName, username}
+    })
+  }
 
-    const tempMatrix = [...matrices];
-    tempMatrix[i] = destination;
-    tempMatrix[n] = source;
+  const loadMatrices = (loadedMatrics) => {
+    if(!loadedMatrics || !loadedMatrics.data) {
+      return;
+    }
+    setMatrices(loadedMatrics);
+  }
+
+  const swapMatrixPositions = (i, n) => {
+    const source = matrices?.data?.[i];
+    const destination = matrices?.data?.[n];
+
+    const tempMatrix = {...matrices, data: [...matrices.data]}
+    const tempData = tempMatrix?.data;
+    tempData[i] = destination;
+    tempData[n] = source;
 
     setMatrices(tempMatrix);
   };
@@ -43,43 +59,45 @@ export const MatrixProvider = ({ children }) => {
     if (!focusedMatrix) {
       return;
     }
-    const updatedMatrices = [...matrices];
+    const updatedMatrices = {...matrices, data: [...matrices.data]};
+    const updatedMetricesData = updatedMatrices?.data;
     const updatedFocusedMatrix = generateEmptyMatrix(gridSize);
-    updatedMatrices[focusedMatrixIndex] = updatedFocusedMatrix;
+
+    updatedMetricesData[focusedMatrixIndex] = updatedFocusedMatrix;
 
     setMatrices(updatedMatrices);
   };
 
   const handleCellClick = (x, y, colorId) => {
     const focusedMatrix = getFocusedMatrix();
+
     if (!focusedMatrix) {
       return;
     }
-    const updatedMatrices = [...matrices];
+    const updatedMatrices = {...matrices, data: [
+      ...matrices.data
+    ]};
 
     const updatedFocusedMatrix = [...focusedMatrix];
     const beforeCoordinateValue = updatedFocusedMatrix[y][x];
+
     updatedFocusedMatrix[y][x] = beforeCoordinateValue === 0 ? colorId : 0;
-    updatedMatrices[focusedMatrixIndex] = updatedFocusedMatrix;
+    const updatedData = updatedMatrices?.data;
+    updatedData[focusedMatrixIndex] = updatedFocusedMatrix;
 
     setMatrices(updatedMatrices);
   };
 
-  const pushNewMatrix = () => {
-    setMatrices((prev) => {
-      return [...prev, generateEmptyMatrix(gridSize)];
-    });
-    setFocusedMatrixIndex(matrices.length);
-  };
-
   const pushNewMatrixAt = (index) => {
-    const updatedMatrices = [...matrices];
-    const matrixAtIndex = updatedMatrices[index];
+    const updatedMatrices = {...matrices, data: [...matrices.data]};
+    const matrixAtIndex = updatedMatrices?.data?.[index];
+
     if (!matrixAtIndex) {
       return;
     }
+
     const nextIndex = index + 1;
-    updatedMatrices.splice(nextIndex, 0, generateEmptyMatrix(gridSize));
+    updatedMatrices?.data?.splice(nextIndex, 0, generateEmptyMatrix(gridSize));
 
     setMatrices(updatedMatrices);
     setFocusedMatrixIndex(nextIndex);
@@ -90,34 +108,34 @@ export const MatrixProvider = ({ children }) => {
   };
 
   const getFocusedMatrix = () => {
-    return matrices?.[focusedMatrixIndex];
+    return matrices?.data?.[focusedMatrixIndex];
   };
 
   const getMatrixAtPosition = (i) => {
-    return matrices?.[i];
+    return matrices?.data?.[i];
   };
 
   const deleteMatrixAt = (index) => {
-    const matrixAtIndex = matrices[index];
+    const updatedMatrices = {...matrices, data: [...matrices.data]};
+    const matrixAtIndex = updatedMatrices?.data?.[index];
     if (!matrixAtIndex) {
       return;
     }
-
-    const updatedMatrices = [...matrices];
-    updatedMatrices.splice(index, 1);
+    updatedMatrices?.data?.splice(index, 1);
 
     setMatrices(updatedMatrices);
     setFocusedMatrixIndex(index > 0 ? index - 1 : 0);
   };
 
   const copyMatrixAt = (index) => {
-    const updatedMatrices = [...matrices];
-    const matrixAtIndex = updatedMatrices[index];
+    const updatedMatrices = {...matrices, data: [...matrices.data]};
+    const matrixAtIndex = updatedMatrices?.data?.[index];
     if (!matrixAtIndex) {
       return;
     }
-    const deepCopy = matrixAtIndex.map((m) => m.slice())?.slice();
-    updatedMatrices.splice(index, 0, deepCopy);
+
+    const deepCopy = matrixAtIndex?.map((m) => m.slice())?.slice(); 
+    updatedMatrices?.data?.splice(index, 0, deepCopy);
 
     setMatrices(updatedMatrices);
     setFocusedMatrixIndex(index + 1);
@@ -127,6 +145,7 @@ export const MatrixProvider = ({ children }) => {
     <MatrixContext.Provider
       value={{
         animate,
+        loadMatrices,
         isAnimating,
         copyMatrixAt,
         deleteMatrixAt,
@@ -138,10 +157,10 @@ export const MatrixProvider = ({ children }) => {
         handleMatrixFocusChange,
         matrices,
         handleCellClick,
-        pushNewMatrix,
         pushNewMatrixAt,
         resetMatrix,
         swapMatrixPositions,
+        setMatricesProperties
       }}
     >
       {children}

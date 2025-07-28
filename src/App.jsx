@@ -47,6 +47,10 @@ const FrameBar = () => {
   );
 };
 
+import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import RepeatIcon from '@mui/icons-material/Repeat';
+import FileOpenIcon from '@mui/icons-material/FileOpen';
+
 const SideBar = ({ handleCodeToggle, handleColorCodeToggle, displayState }) => {
   const { animate, isAnimating } = useMatrixProvider();
   const { colorCodeVisible, codeVisible } = displayState;
@@ -66,8 +70,9 @@ const SideBar = ({ handleCodeToggle, handleColorCodeToggle, displayState }) => {
       }}
     >
       <Paper sx={{ minHeight: "100vh", width: "20vw" }} elevation={1}>
-        <Grid container>
-          <Grid container direction="column" alignItems="center" spacing={1}>
+        <Grid container  justifyContent="space-between" id="top">
+          <Grid container direction="column" alignItems="center" id="second" spacing={1}>
+            
             <Grid item>
               <ColorSelector />
             </Grid>
@@ -92,15 +97,55 @@ const SideBar = ({ handleCodeToggle, handleColorCodeToggle, displayState }) => {
               </Button>
             </Grid>
             <Grid item sx={{ width: "95%" }}>
-              <Button
+              {/* <Button
                 disabled={isAnimating}
                 fullWidth
                 variant="outlined"
                 onClick={animate}
               >
                 Play
-              </Button>
+              </Button> */}
+              <Tooltip title="Play" arrow placement="right">
+                <PlayCircleIcon
+                  onClick={animate}
+                  sx={{
+                      fontSize: "xxx-large",
+                      cursor: "pointer",
+                      transition:
+                      "color 0.5s ease, transform 0.5s ease",
+                      "&:hover": {
+                          color: "success.main",
+                          transform: "scale(1.2)",
+                      },
+                  }}
+               />
+              </Tooltip>
+              <Tooltip title="Loop Animation" arrow placement="right">
+                <RepeatIcon
+                  onClick={animate}
+                  sx={{
+                      fontSize: "xxx-large",
+                      cursor: "pointer",
+                      transition:
+                      "color 0.5s ease, transform 0.5s ease",
+                      "&:hover": {
+                          color: "warning.main",
+                          transform: "scale(1.2)",
+                      },
+                  }}
+               />
+              </Tooltip>
+              <Grid container item>
+                <Grid item>
+                  <SaveButtonModal />
+                </Grid>
+                <Grid item>
+                  <LoadButtonModal />
+                </Grid>
+              </Grid>
+
             </Grid>
+            
           </Grid>
         </Grid>
       </Paper>
@@ -212,7 +257,7 @@ export const CodeDisplay = () => {
             sx={{ marginBottom: 1 }}
           >
             
-            {matricesRow.map((matrix, mIndex) => (
+            {matricesRow?.map((matrix, mIndex) => (
               <Grid item xs={4} key={"m-" + mIndex}>
                 <Grid container direction="column" spacing={0}>
                   {matrix?.map((line, lineIndex) => {
@@ -272,6 +317,9 @@ const hexToRgb = (hex) => {
 };
 
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import { SaveButtonModal } from "./components/save/Save";
+import { LoadButtonModal } from "./components/load/Load";
+
 export const ColorPaletteCodeDisplay = () => {
   const { colorPalette } = useColorSelector();
   const [colorpaletteMappedToRGB, setColorpaletteMappedToRGB] = useState();

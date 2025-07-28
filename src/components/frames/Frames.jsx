@@ -28,6 +28,7 @@ export const Frames = () => {
     resetMatrix,
     swapMatrixPositions,
   } = useMatrixProvider();
+console.log("ma", matrices)
   const isFocused = (i) => focusedMatrixIndex === i;
   const [dragTarget, setDragTarget] = useState();
   const theme = useTheme();
@@ -81,7 +82,7 @@ export const Frames = () => {
       }}
     >
       <>
-        {matrices?.map((frame, i) => {
+        {matrices?.data?.map((frame, i) => {
           return (
             <>
               <Paper
@@ -171,7 +172,7 @@ export const Frames = () => {
                             />
                           </Tooltip>
                         </Grid>
-                        {matrices?.length > 1 && (
+                        {matrices?.data?.length > 1 && (
                           <Grid item>
                             <Tooltip title="Delete" arrow placement="right">
                               <DeleteIcon
@@ -190,7 +191,7 @@ export const Frames = () => {
                             </Tooltip>
                           </Grid>
                         )}
-                        {matrices?.length < 2 && (
+                        {matrices?.data?.length < 2 && (
                           <Grid item>
                             <DeleteIcon fontSize="xx-small" />
                           </Grid>
@@ -206,12 +207,6 @@ export const Frames = () => {
                   </Grid>
                 </div>
               </Paper>
-              {/* <Divider
-                id={`divider-${i + 1}`}
-                orientation="vertical"
-                variant="middle"
-                flexItem
-              /> */}
             </>
           );
         })}
