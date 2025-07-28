@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && yarn --cwd ./api install",
     "lint": "eslint .",
     "preview": "vite preview",
     "heroku-postbuild": "yarn build",
