@@ -28,7 +28,7 @@ export const Frames = () => {
     resetMatrix,
     swapMatrixPositions,
   } = useMatrixProvider();
-console.log("ma", matrices)
+  // console.log("ma", matrices)
   const isFocused = (i) => focusedMatrixIndex === i;
   const [dragTarget, setDragTarget] = useState();
   const theme = useTheme();

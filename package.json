@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "heroku-postbuild": "yarn build",
-    "start": "serve -s dist"
+    "start": "node ./api/server.js"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
