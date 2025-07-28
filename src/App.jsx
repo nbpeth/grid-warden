@@ -247,9 +247,9 @@ export const CodeDisplay = () => {
         overflow: "auto",
       }}
     >
-      <CopyContentButton data={JSON.stringify(matrices)} />
+      <CopyContentButton data={JSON.stringify(matrices?.data)} />
       <pre style={{ fontSize: "x-small" }}>
-        {chunk(matrices, 3).map((matricesRow, rowIndex) => (
+        {chunk(matrices?.data, 3).map((matricesRow, rowIndex) => (
           <Grid
             container
             spacing={1}
