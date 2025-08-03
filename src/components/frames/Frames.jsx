@@ -16,7 +16,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import { ThumbNail } from "../thumbnail/Thumbnail";
 
-export const Frames = ({isMobile}) => {
+export const Frames = ({ isMobile }) => {
   const {
     matrices,
     focusedMatrixIndex,
@@ -114,7 +114,11 @@ export const Frames = ({isMobile}) => {
                     alignItems="center"
                   >
                     <Grid item container spacing={1}>
-                      <ThumbNail isMobile={isMobile} i={i} gridSize={gridSize} />
+                      <ThumbNail
+                        isMobile={isMobile}
+                        i={i}
+                        gridSize={gridSize}
+                      />
 
                       <Grid
                         id={`frame-container-actions-container-${i}`}

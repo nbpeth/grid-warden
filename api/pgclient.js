@@ -1,7 +1,7 @@
 const { Pool } = require("pg");
 const uuid = require("uuid");
 
-const DB_CONNECTION_STRING = process.env.DATABASE_URL
+const DB_CONNECTION_STRING = process.env.DATABASE_URL;
 
 const dbConnectionProperties = {
   connectionString: DB_CONNECTION_STRING,
@@ -44,8 +44,7 @@ const listUserMatrices = async () => {
 };
 
 const getMatrixById = async (id) => {
-  const query =
-    "select * from user_matrices where id=$1;";
+  const query = "select * from user_matrices where id=$1;";
 
   const result = await executeQuery({ query, values: [id] });
 
@@ -53,36 +52,41 @@ const getMatrixById = async (id) => {
 };
 
 const deleteMatrixById = async (id) => {
-  const query =
-    "delete from user_matrices where id=$1;";
+  const query = "delete from user_matrices where id=$1;";
 
   const result = await executeQuery({ query, values: [id] });
 
   return result;
 };
 
+const saveUserMatrix = async ({ userName, projectName, data, id }) => {
+  const query =
+    "insert into user_matrices (username, matrix_name, matrix_data, updated_date) values ($1, $2, $3, NOW()) RETURNING *;";
 
+  const result = await executeQuery({
+    query,
+    values: [userName, projectName, JSON.stringify(data)],
+  });
 
-const saveUserMatrix = async ({ userName, projectName, data, id}) => {
-    const query = "insert into user_matrices (username, matrix_name, matrix_data, updated_date) values ($1, $2, $3, NOW()) RETURNING *;";
+  return result;
+};
 
-    const result = await executeQuery({ query, values: [userName, projectName, JSON.stringify(data)] });
+const saveUpdateUserMatrix = async ({ userName, projectName, data, id }) => {
+  const query =
+    "update user_matrices set username=$1, matrix_name=$2, matrix_data=$3, updated_date=NOW() where id=$4  RETURNING *;";
 
-    return result;
-}
+  const result = await executeQuery({
+    query,
+    values: [userName, projectName, JSON.stringify(data), id],
+  });
 
-const saveUpdateUserMatrix = async ({ userName, projectName, data, id}) => {
-    const query = "update user_matrices set username=$1, matrix_name=$2, matrix_data=$3, updated_date=NOW() where id=$4  RETURNING *;";
-
-    const result = await executeQuery({ query, values: [userName, projectName, JSON.stringify(data), id] });
-
-    return result;
-}
+  return result;
+};
 
 module.exports = {
-    deleteMatrixById,
-    getMatrixById,
-    listUserMatrices,
-    saveUserMatrix,
-    saveUpdateUserMatrix
-}
+  deleteMatrixById,
+  getMatrixById,
+  listUserMatrices,
+  saveUserMatrix,
+  saveUpdateUserMatrix,
+};

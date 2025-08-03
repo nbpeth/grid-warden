@@ -3,12 +3,15 @@ import { ThumbnailCell } from "../thumbnailCell/ThumbnailCell";
 
 export const ThumbNail = ({ i, gridSize, isMobile }) => {
   return (
-    <Grid container alignItems="center" justifyContent="center"  id={`frame-container-matrix-container-${i}`}
-    //  sx={{height: isMobile ? 40 : 75}}
-     >
+    <Grid
+      container
+      alignItems="center"
+      justifyContent="center"
+      id={`frame-container-matrix-container-${i}`}
+      //  sx={{height: isMobile ? 40 : 75}}
+    >
       <Grid item>
         <div
-        
           style={{
             display: "grid",
             gridTemplateColumns: `repeat(${gridSize}, 1fr)`,

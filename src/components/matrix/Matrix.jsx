@@ -1,8 +1,8 @@
 import { Grid, Paper } from "@mui/material";
-import React, { useRef, useLayoutEffect, useEffect, useState } from "react";
-import { Cell } from "../cell/Cell";
-import { useMatrixProvider } from "../../hooks/useMatrixProvider";
+import { useEffect, useState } from "react";
 import { useColorSelector } from "../../hooks/useColorSelector";
+import { useMatrixProvider } from "../../hooks/useMatrixProvider";
+import { Cell } from "../cell/Cell";
 
 export const Container = ({ children }) => {
   return (
@@ -12,10 +12,10 @@ export const Container = ({ children }) => {
   );
 };
 
-export const Matrix = ({isMobile}) => {
+export const Matrix = ({ isMobile }) => {
   const { handleCellClick, focusedMatrixIndex, matrices, gridSize } =
     useMatrixProvider();
-  const thisMaxtrix = matrices?.data?.[focusedMatrixIndex];  
+  const thisMaxtrix = matrices?.data?.[focusedMatrixIndex];
   const [isDragging, setIsDragging] = useState(false);
   const [mouseDragSelectedCell, setMouseDragSelectedCell] = useState(null);
   const [squareSize, setSquareSize] = useState(0);
@@ -29,8 +29,8 @@ export const Matrix = ({isMobile}) => {
     };
 
     updateSquareSize();
-    window.addEventListener('resize', updateSquareSize);
-    return () => window.removeEventListener('resize', updateSquareSize);
+    window.addEventListener("resize", updateSquareSize);
+    return () => window.removeEventListener("resize", updateSquareSize);
   }, []);
 
   const { selectedColor } = useColorSelector();
@@ -77,12 +77,17 @@ export const Matrix = ({isMobile}) => {
   }, []);
 
   return (
-    <Grid container direction="column" 
-    // ref={parentRef}
-     id="matrix-container" sx={{ 
-    // width: "80vw", height: "80vh"
-     width: 'min(80vh, 80vw)', height: 'min(80vh, 80vw)',
-    }}>
+    <Grid
+      container
+      direction="column"
+      // ref={parentRef}
+      id="matrix-container"
+      sx={{
+        // width: "80vw", height: "80vh"
+        width: "min(80vh, 80vw)",
+        height: "min(80vh, 80vw)",
+      }}
+    >
       <Grid container item>
         <Grid item>
           <Container>

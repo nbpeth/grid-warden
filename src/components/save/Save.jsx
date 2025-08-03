@@ -1,8 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { Modal, Box, Typography, TextField, Button, Tooltip } from '@mui/material';
-import { useMatrixProvider } from '../../hooks/useMatrixProvider';
-import axios from 'axios';
-import SaveIcon from '@mui/icons-material/Save';
+import React, { useEffect, useState } from "react";
+import {
+  Modal,
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Tooltip,
+} from "@mui/material";
+import { useMatrixProvider } from "../../hooks/useMatrixProvider";
+import axios from "axios";
+import SaveIcon from "@mui/icons-material/Save";
 
 export const SaveButtonModal = () => {
   const [open, setOpen] = useState(false);
@@ -17,13 +24,16 @@ export const SaveButtonModal = () => {
   useEffect(() => {
     const projectName = matrices?.projectName;
     const username = matrices?.username;
-    if(!projectName) {
-        return;
+    if (!projectName) {
+      return;
     }
-    if(formData?.projectName !== projectName || formData?.userName != username) {
-        setFormData({...formData, projectName, userName: username})
+    if (
+      formData?.projectName !== projectName ||
+      formData?.userName != username
+    ) {
+      setFormData({ ...formData, projectName, userName: username });
     }
-  }, [matrices])
+  }, [matrices]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -35,48 +45,54 @@ export const SaveButtonModal = () => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleUpdateSave = async (matrices) => {
     setLoading(true);
-    const response = await axios.put(`/api/v1/matrices/${matrices?.id}`, {data: matrices, ...formData})       
-    const {id, matrix_name, username} = response?.data;
+    const response = await axios.put(`/api/v1/matrices/${matrices?.id}`, {
+      data: matrices,
+      ...formData,
+    });
+    const { id, matrix_name, username } = response?.data;
 
-    setMatricesProperties({id, projectName: matrix_name, username })
-    
+    setMatricesProperties({ id, projectName: matrix_name, username });
+
     setLoading(false);
-    setFormData({ projectName: '', userName: '' });
+    setFormData({ projectName: "", userName: "" });
     setOpen(false);
   };
 
   const handleSaveNew = async () => {
     setLoading(true);
-    const response = await axios.put("/api/v1/matrices", {data: matrices, ...formData})       
-    const {id, matrix_name, username} = response?.data;
+    const response = await axios.put("/api/v1/matrices", {
+      data: matrices,
+      ...formData,
+    });
+    const { id, matrix_name, username } = response?.data;
 
-    setMatricesProperties({id, projectName: matrix_name, username })
-    
+    setMatricesProperties({ id, projectName: matrix_name, username });
+
     setLoading(false);
-    setFormData({ projectName: '', userName: '' });
+    setFormData({ projectName: "", userName: "" });
     setOpen(false);
   };
 
   const handleCancel = () => {
-    setFormData({ projectName: '', userName: '' });
+    setFormData({ projectName: "", userName: "" });
     setOpen(false);
   };
 
   const modalStyle = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
     width: "50vw",
-    bgcolor: 'background.paper',
+    bgcolor: "background.paper",
     boxShadow: 24,
     borderRadius: 2,
     p: 0,
@@ -84,22 +100,20 @@ export const SaveButtonModal = () => {
 
   return (
     <div className="p-8">
-
       <Tooltip title="Save Current Project" arrow placement="right">
         <SaveIcon
-            onClick={handleClickOpen}
-            sx={{
-                fontSize: "xxx-large",
-                cursor: "pointer",
-                transition:
-                "color 0.5s ease, transform 0.5s ease",
-                "&:hover": {
-                    color: "primary.main",
-                    transform: "scale(1.5)",
-                },
-            }}
+          onClick={handleClickOpen}
+          sx={{
+            fontSize: "xxx-large",
+            cursor: "pointer",
+            transition: "color 0.5s ease, transform 0.5s ease",
+            "&:hover": {
+              color: "primary.main",
+              transform: "scale(1.5)",
+            },
+          }}
         />
-    </Tooltip>
+      </Tooltip>
 
       <Modal
         open={open}
@@ -108,13 +122,21 @@ export const SaveButtonModal = () => {
         aria-describedby="save-modal-description"
       >
         <Box sx={modalStyle}>
-          <Box sx={{ px: 3, py: 2, borderBottom: '1px solid #e0e0e0' }}>
+          <Box sx={{ px: 3, py: 2, borderBottom: "1px solid #e0e0e0" }}>
             <Typography id="save-modal-title" variant="h6" component="h2">
               Save Project
             </Typography>
           </Box>
 
-          <Box sx={{ px: 3, py: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Box
+            sx={{
+              px: 3,
+              py: 2,
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+            }}
+          >
             <TextField
               id="projectName"
               name="projectName"
@@ -139,7 +161,16 @@ export const SaveButtonModal = () => {
             />
           </Box>
 
-          <Box sx={{ px: 3, py: 2, borderTop: '1px solid #e0e0e0', display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
+          <Box
+            sx={{
+              px: 3,
+              py: 2,
+              borderTop: "1px solid #e0e0e0",
+              display: "flex",
+              justifyContent: "flex-end",
+              gap: 1,
+            }}
+          >
             <Button
               onClick={handleCancel}
               color="inherit"
@@ -148,28 +179,25 @@ export const SaveButtonModal = () => {
             >
               Cancel
             </Button>
-            { matrices?.id && (
-                <Button
+            {matrices?.id && (
+              <Button
                 onClick={() => handleUpdateSave(matrices)}
                 disabled={!formData.projectName.trim() || loading}
                 color="primary"
                 variant="contained"
-                
-                >
-                    Update and Save
-                </Button>
+              >
+                Update and Save
+              </Button>
             )}
-            
-                <Button
-                onClick={() => handleSaveNew()}
-                disabled={!formData.projectName.trim() || loading}
-                color="secondary"
-                variant="contained"
-                
-                >
-                    Save New
-                </Button>
-            
+
+            <Button
+              onClick={() => handleSaveNew()}
+              disabled={!formData.projectName.trim() || loading}
+              color="secondary"
+              variant="contained"
+            >
+              Save New
+            </Button>
           </Box>
         </Box>
       </Modal>

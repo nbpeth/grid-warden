@@ -8,16 +8,19 @@ const generateEmptyMatrix = (gridSize) => {
 
 export const MatrixProvider = ({ children }) => {
   const [gridSize, _] = useState(8);
-  const [matrices, setMatrices] = useState({id: undefined, data: [generateEmptyMatrix(gridSize)]});
+  const [matrices, setMatrices] = useState({
+    id: undefined,
+    data: [generateEmptyMatrix(gridSize)],
+  });
 
   const [focusedMatrixIndex, setFocusedMatrixIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const focusedMatrix = matrices?.data?.[focusedMatrixIndex];
-  
+
   const animate = async () => {
     setFocusedMatrixIndex(0);
     setIsAnimating(true);
-    
+
     for (let i = 0; i < matrices?.data?.length; i++) {
       await new Promise((resolve) => {
         setTimeout(() => {
@@ -29,26 +32,26 @@ export const MatrixProvider = ({ children }) => {
     setIsAnimating(false);
   };
 
-  const setMatricesProperties = ({id, projectName, username}) => {
+  const setMatricesProperties = ({ id, projectName, username }) => {
     setMatrices((prev) => {
-      return {...prev, id, projectName, username}
-    })
-  }
+      return { ...prev, id, projectName, username };
+    });
+  };
 
   const loadMatrices = (loadedMatrics) => {
-    if(!loadedMatrics || !loadedMatrics.data) {
+    if (!loadedMatrics || !loadedMatrics.data) {
       return;
     }
-    
+
     // setMatrices(loadedMatrics);
     setMatrices(loadedMatrics);
-  }
+  };
 
   const swapMatrixPositions = (i, n) => {
     const source = matrices?.data?.[i];
     const destination = matrices?.data?.[n];
 
-    const tempMatrix = {...matrices, data: [...matrices.data]}
+    const tempMatrix = { ...matrices, data: [...matrices.data] };
     const tempData = tempMatrix?.data;
     tempData[i] = destination;
     tempData[n] = source;
@@ -61,7 +64,7 @@ export const MatrixProvider = ({ children }) => {
     if (!focusedMatrix) {
       return;
     }
-    const updatedMatrices = {...matrices, data: [...matrices.data]};
+    const updatedMatrices = { ...matrices, data: [...matrices.data] };
     const updatedMetricesData = updatedMatrices?.data;
     const updatedFocusedMatrix = generateEmptyMatrix(gridSize);
 
@@ -76,9 +79,7 @@ export const MatrixProvider = ({ children }) => {
     if (!focusedMatrix) {
       return;
     }
-    const updatedMatrices = {...matrices, data: [
-      ...matrices.data
-    ]};
+    const updatedMatrices = { ...matrices, data: [...matrices.data] };
 
     const updatedFocusedMatrix = [...focusedMatrix];
     const beforeCoordinateValue = updatedFocusedMatrix[y][x];
@@ -91,7 +92,7 @@ export const MatrixProvider = ({ children }) => {
   };
 
   const pushNewMatrixAt = (index) => {
-    const updatedMatrices = {...matrices, data: [...matrices.data]};
+    const updatedMatrices = { ...matrices, data: [...matrices.data] };
     const matrixAtIndex = updatedMatrices?.data?.[index];
 
     if (!matrixAtIndex) {
@@ -118,7 +119,7 @@ export const MatrixProvider = ({ children }) => {
   };
 
   const deleteMatrixAt = (index) => {
-    const updatedMatrices = {...matrices, data: [...matrices.data]};
+    const updatedMatrices = { ...matrices, data: [...matrices.data] };
     const matrixAtIndex = updatedMatrices?.data?.[index];
     if (!matrixAtIndex) {
       return;
@@ -130,13 +131,13 @@ export const MatrixProvider = ({ children }) => {
   };
 
   const copyMatrixAt = (index) => {
-    const updatedMatrices = {...matrices, data: [...matrices.data]};
+    const updatedMatrices = { ...matrices, data: [...matrices.data] };
     const matrixAtIndex = updatedMatrices?.data?.[index];
     if (!matrixAtIndex) {
       return;
     }
 
-    const deepCopy = matrixAtIndex?.map((m) => m.slice())?.slice(); 
+    const deepCopy = matrixAtIndex?.map((m) => m.slice())?.slice();
     updatedMatrices?.data?.splice(index, 0, deepCopy);
 
     setMatrices(updatedMatrices);
@@ -162,7 +163,7 @@ export const MatrixProvider = ({ children }) => {
         pushNewMatrixAt,
         resetMatrix,
         swapMatrixPositions,
-        setMatricesProperties
+        setMatricesProperties,
       }}
     >
       {children}

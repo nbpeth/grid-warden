@@ -24,14 +24,19 @@ export const ColorSelectorProvider = ({ children }) => {
   const [selectedColor, setSelectedColor] = useState(1);
   const [colorPalette, setColorPalette] = useState(defaultPalette);
 
-  const handleSelectedColorChange = (event) => {
-    setSelectedColor(Number(event?.target?.value));
+  const handleSelectedColorChange = (index) => {
+    setSelectedColor(Number(index));
   };
 
   const handleColorSelectorValueChange = (newColorPosition, value) => {
+    console.log(
+      "# handleColorSelectorValueChange",
+      newColorPosition, value
+    );
     setColorPalette((prev) => {
       const copy = [...prev];
       copy[newColorPosition] = value;
+
       return copy;
     });
   };

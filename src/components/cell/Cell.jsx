@@ -13,12 +13,11 @@ export const Cell = ({
   handleMouseDown,
   handleMouseEnter,
   handleMouseUp,
-  isMobile
+  isMobile,
 }) => {
   const { colorPalette } = useColorSelector();
   const [backgroundColor, setBackgroundColor] = useState(emptyCellColor);
   const { focusedMatrix } = useMatrixProvider();
-  
 
   const colorIdForCoordinate = focusedMatrix?.[y]?.[x];
 
@@ -28,7 +27,6 @@ export const Cell = ({
   useEffect(() => {
     setBackgroundColor(isSelected ? colorValueForCoordinate : emptyCellColor);
   }, [colorPalette, focusedMatrix, isSelected]);
-
 
   return (
     <div
@@ -46,5 +44,3 @@ export const Cell = ({
     ></div>
   );
 };
-
-

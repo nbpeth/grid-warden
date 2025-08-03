@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Drawer,
@@ -12,115 +12,39 @@ import {
   Divider,
   useTheme,
   useMediaQuery,
-  Tooltip
-} from '@mui/material';
-import {
-  PlayArrow,
-  Repeat,
-  Save,
-  FolderOpen,
-  Menu
-} from '@mui/icons-material';
-import { FrameBar } from './App';
-import { Matrix } from './components/matrix/Matrix';
-import { useMatrixProvider } from './hooks/useMatrixProvider';
-import { LoadButtonModal } from './components/load/Load';
-import { SaveButtonModal } from './components/save/Save';
+  Tooltip,
+} from "@mui/material";
+import { PlayArrow, Repeat, Save, FolderOpen, Menu } from "@mui/icons-material";
+import { FrameBar } from "./App";
+import { Matrix } from "./components/matrix/Matrix";
+import { useMatrixProvider } from "./hooks/useMatrixProvider";
+import { LoadButtonModal } from "./components/load/Load";
+import { SaveButtonModal } from "./components/save/Save";
+import { useColorSelector } from "./hooks/useColorSelector";
+import { ColorSelectorV2 } from "./components/colorSelector/ColorSelector";
 
 // Dark theme configuration
 const darkTheme = createTheme({
   palette: {
-    mode: 'dark',
+    mode: "dark",
     primary: {
-      main: '#1976d2',
+      main: "#1976d2",
     },
     background: {
-      default: '#111827',
-      paper: '#1f2937',
+      default: "#111827",
+      paper: "#1f2937",
     },
   },
 });
-
-const ColorSelector = () => {
-  const [selectedColorIndex, setSelectedColorIndex] = useState(0);
-  const [colors, setColors] = useState([
-    '#ef4444', // red
-    '#3b82f6', // blue  
-    '#10b981', // green
-    '#8b5cf6', // purple
-    '#f97316', // orange
-    '#ec4899', // pink
-    '#eab308', // yellow
-    '#6b7280'  // gray
-  ]);
-
-  const updateColor = (index, newColor) => {
-    const newColors = [...colors];
-    newColors[index] = newColor;
-    setColors(newColors);
-  };
-
-  return (
-    <Box sx={{ px: 1 }}>
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-        {colors.map((color, index) => (
-          <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Box
-              component="button"
-              onClick={() => setSelectedColorIndex(index)}
-              sx={{
-                width: 32,
-                height: 32,
-                borderRadius: 1,
-                border: selectedColorIndex === index ? '2px solid white' : '2px solid #9ca3af',
-                backgroundColor: selectedColorIndex === index ? 'white' : 'transparent',
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-                '&:hover': {
-                  borderColor: 'white',
-                },
-              }}
-            />
-
-            <Box
-              component="input"
-              type="color"
-              value={color}
-              onChange={(e) => updateColor(index, e.target.value)}
-              sx={{
-                width: 32,
-                height: 32,
-                borderRadius: 1,
-                cursor: 'pointer',
-                border: 'none',
-                backgroundColor: color,
-                WebkitAppearance: 'none',
-                MozAppearance: 'none',
-                appearance: 'none',
-                '&::-webkit-color-swatch-wrapper': {
-                  padding: 0,
-                },
-                '&::-webkit-color-swatch': {
-                  border: 'none',
-                  borderRadius: '4px',
-                },
-              }}
-            />
-          </Box>
-        ))}
-      </Box>
-    </Box>
-  );
-};
 
 export const NewApp = () => {
   const [drawerWidth, setDrawerWidth] = useState("10vw");
   const [bottomBarHeight, setBottomBarHeight] = useState(200);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const { animate, isAnimating } = useMatrixProvider();
-  
+
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const handleDrawerToggle = () => {
     setMobileDrawerOpen(!mobileDrawerOpen);
@@ -128,86 +52,88 @@ export const NewApp = () => {
 
   useEffect(() => {
     setBottomBarHeight(isMobile ? 150 : 200);
-  }, [isMobile])
+  }, [isMobile]);
 
   const drawerContent = (
     <Box
-      id= 'drawer-content'
+      id="drawer-content"
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
         py: 2,
         gap: 2,
-        
       }}
     >
-      {mobileDrawerOpen && <Box sx={{height:50}} />}
-      <ColorSelector />
-      <Divider 
-        sx={{ 
-          width: '80%', 
-          backgroundColor: '#4b5563',
-          my: 1
-        }} 
+      {mobileDrawerOpen && <Box sx={{ height: 50 }} />}
+      <ColorSelectorV2 />
+      <Divider
+        sx={{
+          width: "80%",
+          backgroundColor: "#4b5563",
+          my: 1,
+        }}
       />
-      <Tooltip title="Play" arrow placement="right">
+      <Tooltip title="Play Animation" arrow placement="right">
         <IconButton
-            disabled={isAnimating} 
-            sx={{ 
-            color: 'white', 
-            '&:hover': { backgroundColor: 'rgba(107, 114, 128, 0.2)' } 
-            }}
+          disabled={isAnimating}
+          sx={{
+            color: "white",
+            transition: "color 0.5s ease, transform 0.5s ease",
+            "&:hover": {
+              color: "success.main",
+              transform: "scale(1.5)",
+            },
+          }}
         >
-            <PlayArrow sx={{fontSize: "xxx-large"}} onClick={animate} />
+          <PlayArrow sx={{ fontSize: "xxx-large" }} onClick={animate} />
         </IconButton>
       </Tooltip>
-      <IconButton 
-        sx={{ 
-          color: 'white', 
-          '&:hover': { backgroundColor: 'rgba(107, 114, 128, 0.2)' } 
+      <IconButton
+        sx={{
+          color: "white",
+          "&:hover": { backgroundColor: "rgba(107, 114, 128, 0.2)" },
         }}
       >
-        <Repeat sx={{fontSize: "xxx-large"}} />
+        <Repeat
+          sx={{
+            fontSize: "xxx-large",
+            transition: "color 0.5s ease, transform 0.5s ease",
+            "&:hover": {
+              color: "warning.main",
+              transform: "scale(1.5)",
+            },
+          }}
+        />
       </IconButton>
-      <IconButton 
-        sx={{ 
-            
-          color: 'white', 
-          '&:hover': { backgroundColor: 'rgba(107, 114, 128, 0.2)' } 
+      <IconButton
+        sx={{
+          color: "white",
+          "&:hover": { backgroundColor: "rgba(107, 114, 128, 0.2)" },
         }}
       >
         {/* <Save sx={{fontSize: "xxx-large"}} /> */}
         <SaveButtonModal />
       </IconButton>
       <LoadButtonModal />
-      {/* <IconButton 
-        // onClick={handleClickOpen}
-        sx={{ 
-          color: 'white', 
-          '&:hover': { backgroundColor: 'rgba(107, 114, 128, 0.2)' } 
-        }}
-      >
-        <FolderOpen sx={{fontSize: "xxx-large"}} />
-      </IconButton> */}
     </Box>
   );
 
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <Box sx={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
+      <Box sx={{ display: "flex", height: "100vh", overflow: "hidden" }}>
         {/* Mobile Menu Button */}
         {isMobile && (
           <IconButton
             sx={{
-              position: 'fixed',
+              position: "fixed",
               top: 16,
               left: 16,
               zIndex: 1300,
-              backgroundColor: '#1f2937',
-              color: 'white',
-              '&:hover': { backgroundColor: '#374151' },
+              backgroundColor: "#1f2937",
+              color: "white",
+              "&:hover": { backgroundColor: "#374151" },
               width: 48,
               height: 48,
             }}
@@ -219,7 +145,7 @@ export const NewApp = () => {
 
         {/* Left Sidebar Drawer */}
         <Drawer
-          variant={isMobile ? 'temporary' : 'permanent'}
+          variant={isMobile ? "temporary" : "permanent"}
           open={isMobile ? mobileDrawerOpen : true}
           onClose={handleDrawerToggle}
           ModalProps={{
@@ -228,23 +154,23 @@ export const NewApp = () => {
           sx={{
             width: drawerWidth,
             flexShrink: 0,
-            '& .MuiDrawer-paper': {
+            "& .MuiDrawer-paper": {
               width: drawerWidth,
-              boxSizing: 'border-box',
-              backgroundColor: '#1f2937',
+              boxSizing: "border-box",
+              backgroundColor: "#1f2937",
               height: `calc(100vh - ${bottomBarHeight}px)`,
-              overflowY: 'auto',
-              overflowX: 'hidden',
-              border: 'none',
-              '&::-webkit-scrollbar': {
-                width: '4px',
+              overflowY: "auto",
+              overflowX: "hidden",
+              border: "none",
+              "&::-webkit-scrollbar": {
+                width: "4px",
               },
-              '&::-webkit-scrollbar-track': {
-                background: '#374151',
+              "&::-webkit-scrollbar-track": {
+                background: "#374151",
               },
-              '&::-webkit-scrollbar-thumb': {
-                background: '#6b7280',
-                borderRadius: '4px',
+              "&::-webkit-scrollbar-thumb": {
+                background: "#6b7280",
+                borderRadius: "4px",
               },
             },
           }}
@@ -259,10 +185,10 @@ export const NewApp = () => {
             display: "flex",
             flexGrow: 1,
             height: `calc(100vh - ${bottomBarHeight}px)`,
-            overflow: 'auto',
-            backgroundColor: '#111827',
+            overflow: "auto",
+            backgroundColor: "#111827",
             ml: isMobile ? 0 : 0, // No margin on mobile since drawer is temporary
-            justifyContent: "center"
+            justifyContent: "center",
           }}
         >
           <Matrix isMobile={isMobile} />
@@ -272,40 +198,40 @@ export const NewApp = () => {
         <AppBar
           position="fixed"
           sx={{
-            top: 'auto',
+            top: "auto",
             bottom: 0,
             height: bottomBarHeight,
-            backgroundColor: '#1f2937',
+            backgroundColor: "#1f2937",
           }}
         >
           <Toolbar
             sx={{
               minHeight: `${bottomBarHeight}px !important`,
-              overflowX: 'auto',
-              overflowY: 'hidden',
+              overflowX: "auto",
+              overflowY: "hidden",
               px: 2,
-              '&::-webkit-scrollbar': {
-                height: '4px',
+              "&::-webkit-scrollbar": {
+                height: "4px",
               },
-              '&::-webkit-scrollbar-track': {
-                background: '#374151',
+              "&::-webkit-scrollbar-track": {
+                background: "#374151",
               },
-              '&::-webkit-scrollbar-thumb': {
-                background: '#6b7280',
-                borderRadius: '4px',
+              "&::-webkit-scrollbar-thumb": {
+                background: "#6b7280",
+                borderRadius: "4px",
               },
             }}
           >
             <Box
               sx={{
-                display: 'flex',
-                alignItems: 'center',
+                display: "flex",
+                alignItems: "center",
                 gap: 2,
-                whiteSpace: 'nowrap',
-                minWidth: 'max-content',
+                whiteSpace: "nowrap",
+                minWidth: "max-content",
               }}
             >
-            <FrameBar isMobile={isMobile} />
+              <FrameBar isMobile={isMobile} />
             </Box>
           </Toolbar>
         </AppBar>
@@ -313,4 +239,3 @@ export const NewApp = () => {
     </ThemeProvider>
   );
 };
-

@@ -30,7 +30,7 @@ const darkTheme = createTheme({
   },
 });
 
-export const FrameBar = ({isMobile}) => {
+export const FrameBar = ({ isMobile }) => {
   return (
     <AppBar position="fixed" sx={{ top: "auto", bottom: 0 }}>
       <Toolbar
@@ -48,9 +48,9 @@ export const FrameBar = ({isMobile}) => {
   );
 };
 
-import PlayCircleIcon from '@mui/icons-material/PlayCircle';
-import RepeatIcon from '@mui/icons-material/Repeat';
-import FileOpenIcon from '@mui/icons-material/FileOpen';
+import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import RepeatIcon from "@mui/icons-material/Repeat";
+import FileOpenIcon from "@mui/icons-material/FileOpen";
 
 const SideBar = ({ handleCodeToggle, handleColorCodeToggle, displayState }) => {
   const { animate, isAnimating } = useMatrixProvider();
@@ -63,20 +63,27 @@ const SideBar = ({ handleCodeToggle, handleColorCodeToggle, displayState }) => {
       direction="cell"
       id="gridpapertop"
       sx={{
-        
         width: "250px",
         position: "fixed",
         height: "100vh",
         left: 0,
         top: 0,
         zIndex: 1,
-        
       }}
     >
-      <Paper sx={{ minHeight: "100vh", width: "20vw" }} elevation={1} id="papertop">
-        <Grid container  justifyContent="space-between" id="top">
-          <Grid container direction="column" alignItems="center" id="second" spacing={1}>
-            
+      <Paper
+        sx={{ minHeight: "100vh", width: "20vw" }}
+        elevation={1}
+        id="papertop"
+      >
+        <Grid container justifyContent="space-between" id="top">
+          <Grid
+            container
+            direction="column"
+            alignItems="center"
+            id="second"
+            spacing={1}
+          >
             <Grid item>
               <ColorSelector />
             </Grid>
@@ -113,31 +120,29 @@ const SideBar = ({ handleCodeToggle, handleColorCodeToggle, displayState }) => {
                 <PlayCircleIcon
                   onClick={animate}
                   sx={{
-                      fontSize: "xxx-large",
-                      cursor: "pointer",
-                      transition:
-                      "color 0.5s ease, transform 0.5s ease",
-                      "&:hover": {
-                          color: "success.main",
-                          transform: "scale(1.2)",
-                      },
+                    fontSize: "xxx-large",
+                    cursor: "pointer",
+                    transition: "color 0.5s ease, transform 0.5s ease",
+                    "&:hover": {
+                      color: "success.main",
+                      transform: "scale(1.2)",
+                    },
                   }}
-               />
+                />
               </Tooltip>
               <Tooltip title="Loop Animation" arrow placement="right">
                 <RepeatIcon
                   onClick={animate}
                   sx={{
-                      fontSize: "xxx-large",
-                      cursor: "pointer",
-                      transition:
-                      "color 0.5s ease, transform 0.5s ease",
-                      "&:hover": {
-                          color: "warning.main",
-                          transform: "scale(1.2)",
-                      },
+                    fontSize: "xxx-large",
+                    cursor: "pointer",
+                    transition: "color 0.5s ease, transform 0.5s ease",
+                    "&:hover": {
+                      color: "warning.main",
+                      transform: "scale(1.2)",
+                    },
                   }}
-               />
+                />
               </Tooltip>
               <Grid container item>
                 <Grid item>
@@ -147,9 +152,7 @@ const SideBar = ({ handleCodeToggle, handleColorCodeToggle, displayState }) => {
                   <LoadButtonModal />
                 </Grid>
               </Grid>
-
             </Grid>
-            
           </Grid>
         </Grid>
       </Paper>
@@ -204,8 +207,10 @@ export const CopyContentButton = ({ data }) => {
           },
           pointerEvents: checkitychecked ? "none" : "auto",
         }}
-      > <Tooltip title="Copy Raw JSON" arrow placement="right">
-        <ContentCopyIcon sx={{ fontSize: "1.5rem" }} />
+      >
+        {" "}
+        <Tooltip title="Copy Raw JSON" arrow placement="right">
+          <ContentCopyIcon sx={{ fontSize: "1.5rem" }} />
         </Tooltip>
       </Box>
 
@@ -260,7 +265,6 @@ export const CodeDisplay = () => {
             key={"row" + rowIndex}
             sx={{ marginBottom: 1 }}
           >
-            
             {matricesRow?.map((matrix, mIndex) => (
               <Grid item xs={4} key={"m-" + mIndex}>
                 <Grid container direction="column" spacing={0}>
