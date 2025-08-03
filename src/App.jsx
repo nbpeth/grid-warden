@@ -47,105 +47,105 @@ export const FrameBar = ({ isMobile }) => {
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import RepeatIcon from "@mui/icons-material/Repeat";
 
-const SideBar = ({ handleCodeToggle, handleColorCodeToggle, displayState }) => {
-  const { animate, isAnimating } = useMatrixProvider();
-  const { colorCodeVisible, codeVisible } = displayState;
+// const SideBar = ({ handleCodeToggle, handleColorCodeToggle, displayState }) => {
+//   const { animate, isAnimating } = useMatrixProvider();
+//   const { colorCodeVisible, codeVisible } = displayState;
 
-  return (
-    <Grid
-      container
-      item
-      direction="cell"
-      id="gridpapertop"
-      sx={{
-        width: "250px",
-        position: "fixed",
-        height: "100vh",
-        left: 0,
-        top: 0,
-        zIndex: 1,
-      }}
-    >
-      <Paper
-        sx={{ minHeight: "100vh", width: "20vw" }}
-        elevation={1}
-        id="papertop"
-      >
-        <Grid container justifyContent="space-between" id="top">
-          <Grid
-            container
-            direction="column"
-            alignItems="center"
-            id="second"
-            spacing={1}
-          >
-            <Grid item>
-              {/* <ColorSelector /> */}
-            </Grid>
-            <Grid item sx={{ width: "95%" }}>
-              <Button
-                fullWidth
-                color="secondary"
-                variant={codeVisible ? "contained" : "outlined"}
-                onClick={handleCodeToggle}
-              >
-                Matrix JSON
-              </Button>
-            </Grid>
-            <Grid item sx={{ width: "95%" }}>
-              <Button
-                fullWidth
-                color="warning"
-                variant={colorCodeVisible ? "contained" : "outlined"}
-                onClick={handleColorCodeToggle}
-              >
-                Pallete JSON
-              </Button>
-            </Grid>
-            <Grid item sx={{ width: "95%" }}>
-              <Tooltip title="Play" arrow placement="right">
-                <PlayCircleIcon
-                  onClick={animate}
-                  sx={{
-                    fontSize: "xxx-large",
-                    cursor: "pointer",
-                    transition: "color 0.5s ease, transform 0.5s ease",
-                    "&:hover": {
-                      color: "success.main",
-                      transform: "scale(1.2)",
-                    },
-                  }}
-                />
-              </Tooltip>
-              <Tooltip title="Loop Animation" arrow placement="right">
-                <RepeatIcon
-                  onClick={animate}
-                  sx={{
-                    fontSize: "xxx-large",
-                    cursor: "pointer",
-                    transition: "color 0.5s ease, transform 0.5s ease",
-                    "&:hover": {
-                      color: "warning.main",
-                      transform: "scale(1.2)",
-                    },
-                  }}
-                />
-              </Tooltip>
-              <Grid container item>
-                <Grid item>
-                  <SaveButtonModal />
-                </Grid>
-                <Grid item>
-                  <LoadButtonModal />
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Paper>
-    </Grid>
-  );
-};
+//   return (
+//     <Grid
+//       container
+//       item
+//       direction="cell"
+//       id="gridpapertop"
+//       sx={{
+//         width: "250px",
+//         position: "fixed",
+//         height: "100vh",
+//         left: 0,
+//         top: 0,
+//         zIndex: 1,
+//       }}
+//     >
+//       <Paper
+//         sx={{ minHeight: "100vh", width: "20vw" }}
+//         elevation={1}
+//         id="papertop"
+//       >
+//         <Grid container justifyContent="space-between" id="top">
+//           <Grid
+//             container
+//             direction="column"
+//             alignItems="center"
+//             id="second"
+//             spacing={1}
+//           >
+//             <Grid item>
+//               {/* <ColorSelector /> */}
+//             </Grid>
+//             <Grid item sx={{ width: "95%" }}>
+//               <Button
+//                 fullWidth
+//                 color="secondary"
+//                 variant={codeVisible ? "contained" : "outlined"}
+//                 onClick={handleCodeToggle}
+//               >
+//                 Matrix JSON
+//               </Button>
+//             </Grid>
+//             <Grid item sx={{ width: "95%" }}>
+//               <Button
+//                 fullWidth
+//                 color="warning"
+//                 variant={colorCodeVisible ? "contained" : "outlined"}
+//                 onClick={handleColorCodeToggle}
+//               >
+//                 Pallete JSON
+//               </Button>
+//             </Grid>
+//             <Grid item sx={{ width: "95%" }}>
+//               <Tooltip title="Play" arrow placement="right">
+//                 <PlayCircleIcon
+//                   onClick={animate}
+//                   sx={{
+//                     fontSize: "xxx-large",
+//                     cursor: "pointer",
+//                     transition: "color 0.5s ease, transform 0.5s ease",
+//                     "&:hover": {
+//                       color: "success.main",
+//                       transform: "scale(1.2)",
+//                     },
+//                   }}
+//                 />
+//               </Tooltip>
+//               <Tooltip title="Loop Animation" arrow placement="right">
+//                 <RepeatIcon
+//                   onClick={animate}
+//                   sx={{
+//                     fontSize: "xxx-large",
+//                     cursor: "pointer",
+//                     transition: "color 0.5s ease, transform 0.5s ease",
+//                     "&:hover": {
+//                       color: "warning.main",
+//                       transform: "scale(1.2)",
+//                     },
+//                   }}
+//                 />
+//               </Tooltip>
+//               <Grid container item>
+//                 <Grid item>
+//                   <SaveButtonModal />
+//                 </Grid>
+//                 <Grid item>
+//                   <LoadButtonModal />
+//                 </Grid>
+//               </Grid>
+//             </Grid>
+//           </Grid>
+//         </Grid>
+//       </Paper>
+//     </Grid>
+//   );
+// };
 
 export const CopyContentButton = ({ data }) => {
   const [checkitychecked, setCheckitychecked] = useState(false);

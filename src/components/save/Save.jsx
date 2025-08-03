@@ -19,6 +19,7 @@ export const SaveButtonModal = () => {
 
   const { matrices, setMatricesProperties, isAnimating } = useMatrixProvider();
   const { colorPalette } = useColorSelector();
+
   const [formData, setFormData] = useState({
     projectName: matrices?.projectName ?? "",
     userName: matrices?.username ?? "",
@@ -56,6 +57,7 @@ export const SaveButtonModal = () => {
 
   const handleUpdateSave = async (matrices, colorPalette) => {
     setLoading(true);
+
     const response = await axios.put(`/api/v1/matrices/${matrices?.id}`, {
       data: { ...matrices, colorPalette },
       ...formData,
@@ -69,10 +71,11 @@ export const SaveButtonModal = () => {
     setOpen(false);
   };
 
-  const handleSaveNew = async () => {
+  const handleSaveNew = async (colorPalette) => {
     setLoading(true);
+
     const response = await axios.put("/api/v1/matrices", {
-      data: matrices,
+      data: { ...matrices, colorPalette },
       ...formData,
     });
     const { id, matrix_name, username } = response?.data;
@@ -195,7 +198,7 @@ export const SaveButtonModal = () => {
             )}
 
             <Button
-              onClick={() => handleSaveNew()}
+              onClick={() => handleSaveNew(colorPalette)}
               disabled={!formData.projectName.trim() || loading}
               color="secondary"
               variant="contained"

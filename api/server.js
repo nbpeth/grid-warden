@@ -3,9 +3,22 @@ const path = require("path");
 const compression = require("compression");
 const postgresClient = require("./pgclient");
 const bodyParser = require("body-parser");
+const os = require("os");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+function getLocalIP() {
+  const interfaces = os.networkInterfaces();
+  for (const name of Object.keys(interfaces)) {
+    for (const interface of interfaces[name]) {
+      if (interface.family === "IPv4" && !interface.internal) {
+        return interface.address;
+      }
+    }
+  }
+  return "localhost";
+}
 
 // Enable gzip compression for better performance
 app.use(compression());
@@ -80,9 +93,12 @@ app.use((err, req, res, next) => {
 });
 
 // Start the server
-app.listen(PORT, () => {
+console.log("process.env.LOCAL_BROADCAST", process.env.LOCAL_BROADCAST);
+app.listen(PORT, "0.0.0.0", () => {
+  const localIP = getLocalIP();
   console.log(`🚀 Server is running on port ${PORT}`);
   console.log(`📱 Access your app at http://localhost:${PORT}`);
+  console.log(`Network: http://${localIP}:${PORT}`);
   console.log(`📁 Serving files from: ${path.join(__dirname, "..", "dist")}`);
 });
 

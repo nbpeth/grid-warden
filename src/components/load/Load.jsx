@@ -176,6 +176,7 @@ const ProjectsTable = ({ projects = [], handleDeleteProject }) => {
       projectName: data?.matrix_name,
       username: data?.username,
     });
+    console.log(data)
     setColorPalette(data?.matrix_data?.colorPalette);
   };
 

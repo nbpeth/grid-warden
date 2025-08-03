@@ -48,7 +48,6 @@ export const NewApp = () => {
     setAnimationSpeed,
     stopAnimation,
   } = useMatrixProvider();
-  // console.log(isRepeating, animationSpeed);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -57,9 +56,9 @@ export const NewApp = () => {
     setMobileDrawerOpen(!mobileDrawerOpen);
   };
 
-  useEffect(() => {
-    setBottomBarHeight(isMobile ? 200 : 200);
-  }, [isMobile]);
+  // useEffect(() => {
+  //   setBottomBarHeight(isMobile ? 200 : 200);
+  // }, [isMobile]);
 
   const drawerContent = (
     <Box
@@ -190,29 +189,25 @@ export const NewApp = () => {
           open={isMobile ? mobileDrawerOpen : true}
           onClose={handleDrawerToggle}
           ModalProps={{
-            keepMounted: true, // Better open performance on mobile
+            keepMounted: true,
           }}
           sx={{
             width: drawerWidth,
             flexShrink: 0,
+            zIndex: 1300, // Lower than AppBar
             "& .MuiDrawer-paper": {
               width: drawerWidth,
               boxSizing: "border-box",
               backgroundColor: "#1f2937",
-              height: `calc(100vh - ${bottomBarHeight}px)`,
+              // Proper height calculation for iPad
+              height: isMobile
+                ? `calc(100vh - ${bottomBarHeight}px - env(safe-area-inset-bottom))`
+                : `calc(100vh - ${bottomBarHeight}px)`,
               overflowY: "auto",
               overflowX: "hidden",
               border: "none",
-              "&::-webkit-scrollbar": {
-                width: "4px",
-              },
-              "&::-webkit-scrollbar-track": {
-                background: "#374151",
-              },
-              "&::-webkit-scrollbar-thumb": {
-                background: "#6b7280",
-                borderRadius: "4px",
-              },
+              // Ensure drawer doesn't overlap bottom bar
+              bottom: isMobile ? `${bottomBarHeight}px` : "auto",
             },
           }}
         >
@@ -225,7 +220,7 @@ export const NewApp = () => {
           sx={{
             display: "flex",
             flexGrow: 1,
-            height: `calc(100vh - ${bottomBarHeight}px)`,
+            height: `calc(100vh - ${300}px)`,
             overflow: "auto",
             backgroundColor: "#111827",
             ml: isMobile ? 0 : 0, // No margin on mobile since drawer is temporary
@@ -243,6 +238,9 @@ export const NewApp = () => {
             bottom: 0,
             height: bottomBarHeight,
             backgroundColor: "#1f2937",
+            zIndex: 1400, // Move z-index here and make it higher
+            // Add iPad-specific bottom padding
+            paddingBottom: "env(safe-area-inset-bottom)",
           }}
         >
           <Toolbar
@@ -261,6 +259,12 @@ export const NewApp = () => {
                 background: "#6b7280",
                 borderRadius: "4px",
               },
+              // Remove these misplaced drawer styles:
+              // zIndex: 1000,  // ❌ Remove this
+              // width: drawerWidth,  // ❌ Remove this
+              // boxSizing: "border-box",  // ❌ Remove this
+              // backgroundColor: "#1f2937",  // ❌ Remove this
+              // height: isMobile ? `calc(100vh - ${bottomBarHeight}px - env(safe-area-inset-bottom))` : `calc(100vh - ${bottomBarHeight}px)`,  // ❌ Remove this
             }}
           >
             <Box
