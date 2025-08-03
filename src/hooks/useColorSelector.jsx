@@ -1,6 +1,7 @@
 import { createContext, useContext, useState } from "react";
 
 const defaultPalette = [
+  
   // "#FF5733",
   // "#C70039",
   // "#900C3F",
@@ -29,10 +30,6 @@ export const ColorSelectorProvider = ({ children }) => {
   };
 
   const handleColorSelectorValueChange = (newColorPosition, value) => {
-    console.log(
-      "# handleColorSelectorValueChange",
-      newColorPosition, value
-    );
     setColorPalette((prev) => {
       const copy = [...prev];
       copy[newColorPosition] = value;
@@ -51,6 +48,7 @@ export const ColorSelectorProvider = ({ children }) => {
         colorHexFromPaletteForPosition,
         selectedColor,
         colorPalette,
+        setColorPalette,
         handleSelectedColorChange,
         handleColorSelectorValueChange,
       }}

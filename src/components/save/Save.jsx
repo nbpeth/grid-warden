@@ -6,16 +6,19 @@ import {
   TextField,
   Button,
   Tooltip,
+  IconButton,
 } from "@mui/material";
 import { useMatrixProvider } from "../../hooks/useMatrixProvider";
 import axios from "axios";
 import SaveIcon from "@mui/icons-material/Save";
+import { useColorSelector } from "../../hooks/useColorSelector";
 
 export const SaveButtonModal = () => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const { matrices, setMatricesProperties } = useMatrixProvider();
+  const { matrices, setMatricesProperties, isAnimating } = useMatrixProvider();
+  const { colorPalette } = useColorSelector();
   const [formData, setFormData] = useState({
     projectName: matrices?.projectName ?? "",
     userName: matrices?.username ?? "",
@@ -51,10 +54,10 @@ export const SaveButtonModal = () => {
     }));
   };
 
-  const handleUpdateSave = async (matrices) => {
+  const handleUpdateSave = async (matrices, colorPalette) => {
     setLoading(true);
     const response = await axios.put(`/api/v1/matrices/${matrices?.id}`, {
-      data: matrices,
+      data: { ...matrices, colorPalette },
       ...formData,
     });
     const { id, matrix_name, username } = response?.data;
@@ -101,18 +104,19 @@ export const SaveButtonModal = () => {
   return (
     <div className="p-8">
       <Tooltip title="Save Current Project" arrow placement="right">
-        <SaveIcon
-          onClick={handleClickOpen}
-          sx={{
-            fontSize: "xxx-large",
-            cursor: "pointer",
-            transition: "color 0.5s ease, transform 0.5s ease",
-            "&:hover": {
-              color: "primary.main",
-              transform: "scale(1.5)",
-            },
-          }}
-        />
+        <IconButton disabled={isAnimating} onClick={handleClickOpen}>
+          <SaveIcon
+            sx={{
+              fontSize: "xxx-large",
+              cursor: "pointer",
+              transition: "color 0.5s ease, transform 0.5s ease",
+              "&:hover": {
+                color: "primary.main",
+                transform: "scale(1.5)",
+              },
+            }}
+          />
+        </IconButton>
       </Tooltip>
 
       <Modal
@@ -181,7 +185,7 @@ export const SaveButtonModal = () => {
             </Button>
             {matrices?.id && (
               <Button
-                onClick={() => handleUpdateSave(matrices)}
+                onClick={() => handleUpdateSave(matrices, colorPalette)}
                 disabled={!formData.projectName.trim() || loading}
                 color="primary"
                 variant="contained"

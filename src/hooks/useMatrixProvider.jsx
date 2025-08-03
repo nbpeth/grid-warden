@@ -1,5 +1,4 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
-import { useFramesProvider } from "../components/frames/Frames";
 
 const MatrixContext = createContext();
 
@@ -31,6 +30,7 @@ export const MatrixProvider = ({ children }) => {
         animationInterruptedRef.current = false;
         return !prev;
       });
+      setFocusedMatrixIndex(0);
     }
   }, [isAnimating]);
 
@@ -62,6 +62,13 @@ export const MatrixProvider = ({ children }) => {
     }
 
     if (isRepeatingRef.current && !animationInterruptedRef.current) {
+      // frame delay
+      await new Promise((resolve) => {
+        setTimeout(() => {
+          resolve();
+        }, 1000 - 1000 * animationSpeed);
+      });
+
       animate(true);
     } else {
       setIsAnimating(false);

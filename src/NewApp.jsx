@@ -81,26 +81,26 @@ export const NewApp = () => {
           my: 1,
         }}
       />
-      <Box sx={{ width: "80%" }}>
+      <Box sx={{ width: "50%" }}>
         <Slider
           value={animationSpeed}
           onChange={(e, value) => setAnimationSpeed(value)}
           min={0.1}
           max={1}
-          step={0.1}
+          step={0.05}
           size="small"
           sx={{ color: "warning.main" }}
         />
       </Box>
 
       {isAnimating ? (
-        <Tooltip title="Play Animation" arrow placement="right">
+        <Tooltip title="Stop Animation" arrow placement="right">
           <IconButton
             sx={{
               color: "white",
               transition: "color 0.5s ease, transform 0.5s ease",
               "&:hover": {
-                color: "success.main",
+                color: "error.main",
                 transform: "scale(1.5)",
               },
             }}
@@ -132,10 +132,11 @@ export const NewApp = () => {
           color: "white",
           "&:hover": { backgroundColor: "rgba(107, 114, 128, 0.2)" },
         }}
+        disabled={isAnimating}
       >
         <Repeat
           sx={{
-            color: isRepeating ? "warning.main" : "inherit",
+            color: isRepeating && !isAnimating ? "warning.main" : "inherit",
             fontSize: "xxx-large",
             transition: "color 0.5s ease, transform 0.5s ease",
             "&:hover": {

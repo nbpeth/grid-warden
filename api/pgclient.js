@@ -59,13 +59,13 @@ const deleteMatrixById = async (id) => {
   return result;
 };
 
-const saveUserMatrix = async ({ userName, projectName, data, id }) => {
+const saveUserMatrix = async ({ userName, projectName, data, colorPalette }) => {
   const query =
-    "insert into user_matrices (username, matrix_name, matrix_data, updated_date) values ($1, $2, $3, NOW()) RETURNING *;";
+    "insert into user_matrices (username, matrix_name, matrix_data, color_palette, updated_date) values ($1, $2, $3, $4, NOW()) RETURNING *;";
 
   const result = await executeQuery({
     query,
-    values: [userName, projectName, JSON.stringify(data)],
+    values: [userName, projectName, JSON.stringify(data), JSON.stringify(colorPalette)],
   });
 
   return result;

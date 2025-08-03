@@ -7,6 +7,7 @@ import {
   Button,
   Tooltip,
   Grid,
+  IconButton,
 } from "@mui/material";
 import { useMatrixProvider } from "../../hooks/useMatrixProvider";
 import axios from "axios";
@@ -17,6 +18,7 @@ export const LoadButtonModal = () => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [projects, setProjects] = useState([]);
+  const { isAnimating } = useMatrixProvider();
 
   useEffect(() => {
     refreshData();
@@ -65,18 +67,21 @@ export const LoadButtonModal = () => {
   return (
     <div className="p-8">
       <Tooltip title="Open Saved Project" arrow placement="right">
-        <FileOpenIcon
-          onClick={handleClickOpen}
-          sx={{
-            fontSize: "xxx-large",
-            cursor: "pointer",
-            transition: "color 0.5s ease, transform 0.5s ease",
-            "&:hover": {
-              color: "secondary.main",
-              transform: "scale(1.5)",
-            },
-          }}
-        />
+        <IconButton disabled={isAnimating} onClick={handleClickOpen}>
+          <FileOpenIcon
+            disabled={isAnimating}
+            onClick={handleClickOpen}
+            sx={{
+              fontSize: "xxx-large",
+              cursor: "pointer",
+              transition: "color 0.5s ease, transform 0.5s ease",
+              "&:hover": {
+                color: "secondary.main",
+                transform: "scale(1.5)",
+              },
+            }}
+          />
+        </IconButton>
       </Tooltip>
 
       <Modal
@@ -154,9 +159,12 @@ export const LoadButtonModal = () => {
   );
 };
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import { useColorSelector } from "../../hooks/useColorSelector";
 
 const ProjectsTable = ({ projects = [], handleDeleteProject }) => {
   const { loadMatrices } = useMatrixProvider();
+  const { setColorPalette } = useColorSelector();
+
   const handleOpenProject = async (projectId) => {
     const response = await axios.get(`/api/v1/matrices/${projectId}`);
 
@@ -168,6 +176,7 @@ const ProjectsTable = ({ projects = [], handleDeleteProject }) => {
       projectName: data?.matrix_name,
       username: data?.username,
     });
+    setColorPalette(data?.matrix_data?.colorPalette);
   };
 
   const formatDate = (dateString) => {
