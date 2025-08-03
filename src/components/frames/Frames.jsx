@@ -1,20 +1,56 @@
-import {
-  Box,
-  Divider,
-  Grid,
-  Paper,
-  Tooltip,
-  Typography,
-  useTheme,
-} from "@mui/material";
-import { useMatrixProvider } from "../../hooks/useMatrixProvider";
 import ClearAllIcon from "@mui/icons-material/ClearAll";
+import { Box, Grid, Paper, Tooltip, Typography, useTheme } from "@mui/material";
+import { useMatrixProvider } from "../../hooks/useMatrixProvider";
 
-import React, { useState } from "react";
+import AddIcon from "@mui/icons-material/Add";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import DeleteIcon from "@mui/icons-material/Delete";
-import AddIcon from "@mui/icons-material/Add";
+import { createContext, useContext, useState } from "react";
 import { ThumbNail } from "../thumbnail/Thumbnail";
+
+const FramesContext = createContext();
+
+export const FramesProvider = ({ children }) => {
+  const [isRepeating, setIsRepeating] = useState(false);
+  const [animationSpeed, setAnimationSpeed] = useState(100);
+
+  // move animate in here?
+
+  const handleRepeatingButtonClick = () => {
+    setIsRepeating((prev) => !prev);
+  };
+
+  const animateF = async () => {
+    setFocusedMatrixIndex(0);
+    setIsAnimating(true);
+
+    for (let i = 0; i < matrices?.data?.length; i++) {
+      await new Promise((resolve) => {
+        setTimeout(() => {
+          setFocusedMatrixIndex(i);
+          resolve();
+        }, 50);
+      });
+    }
+    setIsAnimating(false);
+  };
+
+  return (
+    <FramesContext.Provider
+      value={{
+        isRepeating,
+        animationSpeed,
+        handleRepeatingButtonClick,
+        setAnimationSpeed,
+        setIsRepeating,
+      }}
+    >
+      {children}
+    </FramesContext.Provider>
+  );
+};
+
+export const useFramesProvider = () => useContext(FramesContext);
 
 export const Frames = ({ isMobile }) => {
   const {

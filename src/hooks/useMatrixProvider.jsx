@@ -1,4 +1,5 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { useFramesProvider } from "../components/frames/Frames";
 
 const MatrixContext = createContext();
 
@@ -14,22 +15,65 @@ export const MatrixProvider = ({ children }) => {
   });
 
   const [focusedMatrixIndex, setFocusedMatrixIndex] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
   const focusedMatrix = matrices?.data?.[focusedMatrixIndex];
 
-  const animate = async () => {
+  const [isRepeating, setIsRepeating] = useState(false);
+  const [animationSpeed, setAnimationSpeed] = useState(0.7);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [animationInterrupted, setAnimationInterrupted] = useState(false);
+
+  const isRepeatingRef = useRef(isRepeating);
+  const animationInterruptedRef = useRef(isRepeating);
+
+  useEffect(() => {
+    if (animationInterruptedRef.current) {
+      setAnimationInterrupted((prev) => {
+        animationInterruptedRef.current = false;
+        return !prev;
+      });
+    }
+  }, [isAnimating]);
+
+  const handleRepeatingButtonClick = () => {
+    setIsRepeating((prev) => {
+      const newValue = !prev;
+      isRepeatingRef.current = newValue;
+      return newValue;
+    });
+  };
+
+  const animate = async (shouldLoop = false) => {
+    if (isAnimating && !shouldLoop) return;
+
     setFocusedMatrixIndex(0);
     setIsAnimating(true);
 
     for (let i = 0; i < matrices?.data?.length; i++) {
+      if (animationInterruptedRef.current) {
+        break;
+      }
+
       await new Promise((resolve) => {
         setTimeout(() => {
           setFocusedMatrixIndex(i);
           resolve();
-        }, 50);
+        }, 1000 - 1000 * animationSpeed);
       });
     }
-    setIsAnimating(false);
+
+    if (isRepeatingRef.current && !animationInterruptedRef.current) {
+      animate(true);
+    } else {
+      setIsAnimating(false);
+      setAnimationInterrupted(false);
+    }
+  };
+
+  const stopAnimation = () => {
+    setAnimationInterrupted((prev) => {
+      animationInterruptedRef.current = true;
+      return true;
+    });
   };
 
   const setMatricesProperties = ({ id, projectName, username }) => {
@@ -43,7 +87,6 @@ export const MatrixProvider = ({ children }) => {
       return;
     }
 
-    // setMatrices(loadedMatrics);
     setMatrices(loadedMatrics);
   };
 
@@ -164,6 +207,12 @@ export const MatrixProvider = ({ children }) => {
         resetMatrix,
         swapMatrixPositions,
         setMatricesProperties,
+        isRepeating,
+        animationSpeed,
+        handleRepeatingButtonClick,
+        setAnimationSpeed,
+        setIsRepeating,
+        stopAnimation,
       }}
     >
       {children}

@@ -1,27 +1,26 @@
-import React, { useEffect, useState } from "react";
+import { Menu, PlayArrow, Repeat, Stop } from "@mui/icons-material";
 import {
-  Box,
-  Drawer,
   AppBar,
-  Toolbar,
-  IconButton,
-  Button,
-  ThemeProvider,
+  Box,
   createTheme,
   CssBaseline,
   Divider,
-  useTheme,
-  useMediaQuery,
+  Drawer,
+  IconButton,
+  Slider,
+  ThemeProvider,
+  Toolbar,
   Tooltip,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
-import { PlayArrow, Repeat, Save, FolderOpen, Menu } from "@mui/icons-material";
+import { useEffect, useState } from "react";
 import { FrameBar } from "./App";
-import { Matrix } from "./components/matrix/Matrix";
-import { useMatrixProvider } from "./hooks/useMatrixProvider";
-import { LoadButtonModal } from "./components/load/Load";
-import { SaveButtonModal } from "./components/save/Save";
-import { useColorSelector } from "./hooks/useColorSelector";
 import { ColorSelectorV2 } from "./components/colorSelector/ColorSelector";
+import { LoadButtonModal } from "./components/load/Load";
+import { Matrix } from "./components/matrix/Matrix";
+import { SaveButtonModal } from "./components/save/Save";
+import { useMatrixProvider } from "./hooks/useMatrixProvider";
 
 // Dark theme configuration
 const darkTheme = createTheme({
@@ -38,10 +37,18 @@ const darkTheme = createTheme({
 });
 
 export const NewApp = () => {
-  const [drawerWidth, setDrawerWidth] = useState("10vw");
+  const [drawerWidth, setDrawerWidth] = useState("15vw");
   const [bottomBarHeight, setBottomBarHeight] = useState(200);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const { animate, isAnimating } = useMatrixProvider();
+  const {
+    isRepeating,
+    animationSpeed,
+    handleRepeatingButtonClick,
+    setAnimationSpeed,
+    stopAnimation,
+  } = useMatrixProvider();
+  // console.log(isRepeating, animationSpeed);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -51,7 +58,7 @@ export const NewApp = () => {
   };
 
   useEffect(() => {
-    setBottomBarHeight(isMobile ? 150 : 200);
+    setBottomBarHeight(isMobile ? 200 : 200);
   }, [isMobile]);
 
   const drawerContent = (
@@ -74,22 +81,53 @@ export const NewApp = () => {
           my: 1,
         }}
       />
-      <Tooltip title="Play Animation" arrow placement="right">
-        <IconButton
-          disabled={isAnimating}
-          sx={{
-            color: "white",
-            transition: "color 0.5s ease, transform 0.5s ease",
-            "&:hover": {
-              color: "success.main",
-              transform: "scale(1.5)",
-            },
-          }}
-        >
-          <PlayArrow sx={{ fontSize: "xxx-large" }} onClick={animate} />
-        </IconButton>
-      </Tooltip>
+      <Box sx={{ width: "80%" }}>
+        <Slider
+          value={animationSpeed}
+          onChange={(e, value) => setAnimationSpeed(value)}
+          min={0.1}
+          max={1}
+          step={0.1}
+          size="small"
+          sx={{ color: "warning.main" }}
+        />
+      </Box>
+
+      {isAnimating ? (
+        <Tooltip title="Play Animation" arrow placement="right">
+          <IconButton
+            sx={{
+              color: "white",
+              transition: "color 0.5s ease, transform 0.5s ease",
+              "&:hover": {
+                color: "success.main",
+                transform: "scale(1.5)",
+              },
+            }}
+          >
+            <Stop sx={{ fontSize: "xxx-large" }} onClick={stopAnimation} />
+          </IconButton>
+        </Tooltip>
+      ) : (
+        <Tooltip title="Play Animation" arrow placement="right">
+          <IconButton
+            disabled={isAnimating}
+            sx={{
+              color: "white",
+              transition: "color 0.5s ease, transform 0.5s ease",
+              "&:hover": {
+                color: "success.main",
+                transform: "scale(1.5)",
+              },
+            }}
+          >
+            <PlayArrow sx={{ fontSize: "xxx-large" }} onClick={animate} />
+          </IconButton>
+        </Tooltip>
+      )}
+
       <IconButton
+        onClick={() => handleRepeatingButtonClick()}
         sx={{
           color: "white",
           "&:hover": { backgroundColor: "rgba(107, 114, 128, 0.2)" },
@@ -97,6 +135,7 @@ export const NewApp = () => {
       >
         <Repeat
           sx={{
+            color: isRepeating ? "warning.main" : "inherit",
             fontSize: "xxx-large",
             transition: "color 0.5s ease, transform 0.5s ease",
             "&:hover": {
@@ -122,6 +161,7 @@ export const NewApp = () => {
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
+
       <Box sx={{ display: "flex", height: "100vh", overflow: "hidden" }}>
         {/* Mobile Menu Button */}
         {isMobile && (

@@ -1,35 +1,31 @@
-import "./App.css";
 import {
   AppBar,
+  Box,
+  Button,
+  createTheme,
   CssBaseline,
   Grid,
-  Toolbar,
-  ThemeProvider,
-  createTheme,
-  Drawer,
   // useTheme,
   Paper,
-  Button,
-  Typography,
+  ThemeProvider,
+  Toolbar,
   Tooltip,
-  Box,
+  Typography
 } from "@mui/material";
-import { Matrix } from "./components/matrix/Matrix";
+import { useMemo, useState } from "react";
+import "./App.css";
+import { Frames, FramesProvider } from "./components/frames/Frames";
 import {
   ColorSelectorProvider,
   useColorSelector,
 } from "./hooks/useColorSelector";
-import { Frames } from "./components/frames/Frames";
 import { MatrixProvider, useMatrixProvider } from "./hooks/useMatrixProvider";
-import { ColorSelector } from "./components/colorSelector/ColorSelector";
-import { useMemo, useState } from "react";
 
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
   },
 });
-
 export const FrameBar = ({ isMobile }) => {
   return (
     <AppBar position="fixed" sx={{ top: "auto", bottom: 0 }}>
@@ -50,7 +46,6 @@ export const FrameBar = ({ isMobile }) => {
 
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import RepeatIcon from "@mui/icons-material/Repeat";
-import FileOpenIcon from "@mui/icons-material/FileOpen";
 
 const SideBar = ({ handleCodeToggle, handleColorCodeToggle, displayState }) => {
   const { animate, isAnimating } = useMatrixProvider();
@@ -85,7 +80,7 @@ const SideBar = ({ handleCodeToggle, handleColorCodeToggle, displayState }) => {
             spacing={1}
           >
             <Grid item>
-              <ColorSelector />
+              {/* <ColorSelector /> */}
             </Grid>
             <Grid item sx={{ width: "95%" }}>
               <Button
@@ -108,14 +103,6 @@ const SideBar = ({ handleCodeToggle, handleColorCodeToggle, displayState }) => {
               </Button>
             </Grid>
             <Grid item sx={{ width: "95%" }}>
-              {/* <Button
-                disabled={isAnimating}
-                fullWidth
-                variant="outlined"
-                onClick={animate}
-              >
-                Play
-              </Button> */}
               <Tooltip title="Play" arrow placement="right">
                 <PlayCircleIcon
                   onClick={animate}
@@ -325,8 +312,8 @@ const hexToRgb = (hex) => {
 };
 
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import { SaveButtonModal } from "./components/save/Save";
 import { LoadButtonModal } from "./components/load/Load";
+import { SaveButtonModal } from "./components/save/Save";
 import { NewApp } from "./NewApp";
 
 export const ColorPaletteCodeDisplay = () => {
@@ -396,44 +383,9 @@ const App = () => {
       <ColorSelectorProvider>
         <CssBaseline />
         <MatrixProvider>
-          <NewApp />
-          {/* <Grid spacontainer sx={{ height: "100vh", width: "100vw" }}>
-            <Grid
-              item
-              sx={{
-                marginLeft: "250px",
-                flexGrow: 1,
-                display: "flex",
-                padding: "20px",
-                overflow: "scroll",
-                id:"sidebar-grid",
-              }}
-            >
-              <SideBar
-                displayState={{ codeVisible, colorCodeVisible }}
-                handleColorCodeToggle={handleColorCodeToggle}
-                handleCodeToggle={handleCodeToggle}
-              />
-
-              <Grid container spacing={2} xs={12} sx={{ padding: "20px" }}>
-                <Grid item>
-                  <Matrix />
-                </Grid>
-
-                <Grid container direction="column" sx={{ overflow: "scroll" }}>
-                  <Grid item>
-                    {codeVisible && <CodeDisplay />}
-                  </Grid>
-                  <Grid item xs={3}>
-                    {colorCodeVisible && <ColorPaletteCodeDisplay />}
-                  </Grid>
-                </Grid>
-              </Grid>
-
-            </Grid>
-            
-          </Grid>
-          <FrameBar /> */}
+          <FramesProvider>
+            <NewApp />
+          </FramesProvider>
         </MatrixProvider>
       </ColorSelectorProvider>
     </ThemeProvider>
