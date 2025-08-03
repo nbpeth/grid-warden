@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "yarn build && yarn --cwd ./api start",
+    "build:watch": "vite build --watch & yarn --cwd ./api start",
     "build": "vite build && yarn --cwd ./api install",
     "lint": "eslint .",
     "preview": "vite preview",

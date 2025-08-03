@@ -5,6 +5,7 @@ import { useMatrixProvider } from "../../hooks/useMatrixProvider";
 export const emptyCellColor = "#444";
 
 export const Cell = ({
+  squareSize,
   x,
   y,
   id,
@@ -12,10 +13,12 @@ export const Cell = ({
   handleMouseDown,
   handleMouseEnter,
   handleMouseUp,
+  isMobile
 }) => {
   const { colorPalette } = useColorSelector();
   const [backgroundColor, setBackgroundColor] = useState(emptyCellColor);
   const { focusedMatrix } = useMatrixProvider();
+  
 
   const colorIdForCoordinate = focusedMatrix?.[y]?.[x];
 
@@ -34,8 +37,8 @@ export const Cell = ({
       onMouseUp={handleMouseUp}
       id={id}
       style={{
-        width: "4vw",
-        // height: "8vh",
+        width: squareSize,
+        height: squareSize,
         border: "1px solid #222",
         aspectRatio: "1 / 1",
         backgroundColor: backgroundColor,

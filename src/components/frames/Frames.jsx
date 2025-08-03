@@ -16,7 +16,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import { ThumbNail } from "../thumbnail/Thumbnail";
 
-export const Frames = () => {
+export const Frames = ({isMobile}) => {
   const {
     matrices,
     focusedMatrixIndex,
@@ -28,7 +28,7 @@ export const Frames = () => {
     resetMatrix,
     swapMatrixPositions,
   } = useMatrixProvider();
-  // console.log("ma", matrices)
+
   const isFocused = (i) => focusedMatrixIndex === i;
   const [dragTarget, setDragTarget] = useState();
   const theme = useTheme();
@@ -86,6 +86,7 @@ export const Frames = () => {
           return (
             <>
               <Paper
+                id={`frame-container-${i}`}
                 key={i}
                 onClick={() => handleMatrixFocusChange(i)}
                 sx={{
@@ -113,13 +114,15 @@ export const Frames = () => {
                     alignItems="center"
                   >
                     <Grid item container spacing={1}>
-                      <ThumbNail i={i} gridSize={gridSize} />
+                      <ThumbNail isMobile={isMobile} i={i} gridSize={gridSize} />
 
                       <Grid
+                        id={`frame-container-actions-container-${i}`}
                         conatiner
                         item
                         direction="column"
                         justifyContent="space-between"
+                        // height={isMobile ? 100 : 40}
                       >
                         <Grid item>
                           <Tooltip title="Insert" arrow placement="right">

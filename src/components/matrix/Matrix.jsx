@@ -1,5 +1,5 @@
 import { Grid, Paper } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useRef, useLayoutEffect, useEffect, useState } from "react";
 import { Cell } from "../cell/Cell";
 import { useMatrixProvider } from "../../hooks/useMatrixProvider";
 import { useColorSelector } from "../../hooks/useColorSelector";
@@ -12,15 +12,27 @@ export const Container = ({ children }) => {
   );
 };
 
-export const Matrix = () => {
+export const Matrix = ({isMobile}) => {
   const { handleCellClick, focusedMatrixIndex, matrices, gridSize } =
     useMatrixProvider();
-  const thisMaxtrix = matrices?.data?.[focusedMatrixIndex];
-  
+  const thisMaxtrix = matrices?.data?.[focusedMatrixIndex];  
   const [isDragging, setIsDragging] = useState(false);
   const [mouseDragSelectedCell, setMouseDragSelectedCell] = useState(null);
+  const [squareSize, setSquareSize] = useState(0);
 
-  
+  useEffect(() => {
+    const updateSquareSize = () => {
+      const vh = window.innerHeight * 0.01;
+      const vw = window.innerWidth * 0.01;
+      const availableSize = Math.min(70 * vh, 70 * vw);
+      setSquareSize(availableSize / 9);
+    };
+
+    updateSquareSize();
+    window.addEventListener('resize', updateSquareSize);
+    return () => window.removeEventListener('resize', updateSquareSize);
+  }, []);
+
   const { selectedColor } = useColorSelector();
 
   const handleMouseDown = (row, col) => {
@@ -65,7 +77,12 @@ export const Matrix = () => {
   }, []);
 
   return (
-    <Grid container direction="column">
+    <Grid container direction="column" 
+    // ref={parentRef}
+     id="matrix-container" sx={{ 
+    // width: "80vw", height: "80vh"
+     width: 'min(80vh, 80vw)', height: 'min(80vh, 80vw)',
+    }}>
       <Grid container item>
         <Grid item>
           <Container>
@@ -84,6 +101,8 @@ export const Matrix = () => {
 
                 return (
                   <Cell
+                    squareSize={squareSize}
+                    isMobile={isMobile}
                     handleCellClick={handleCellClick}
                     x={x}
                     y={y}

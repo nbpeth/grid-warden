@@ -1,9 +1,11 @@
 import { Grid } from "@mui/material";
 import { ThumbnailCell } from "../thumbnailCell/ThumbnailCell";
 
-export const ThumbNail = ({ i, gridSize }) => {
+export const ThumbNail = ({ i, gridSize, isMobile }) => {
   return (
-    <Grid container alignItems="center" justifyContent="center" >
+    <Grid container alignItems="center" justifyContent="center"  id={`frame-container-matrix-container-${i}`}
+    //  sx={{height: isMobile ? 40 : 75}}
+     >
       <Grid item>
         <div
         
@@ -21,6 +23,7 @@ export const ThumbNail = ({ i, gridSize }) => {
 
             return (
               <ThumbnailCell
+                isMobile={isMobile}
                 x={x}
                 y={y}
                 id={cellId}

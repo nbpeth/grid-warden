@@ -8,17 +8,17 @@ const generateEmptyMatrix = (gridSize) => {
 
 export const MatrixProvider = ({ children }) => {
   const [gridSize, _] = useState(8);
-
   const [matrices, setMatrices] = useState({id: undefined, data: [generateEmptyMatrix(gridSize)]});
 
   const [focusedMatrixIndex, setFocusedMatrixIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const focusedMatrix = matrices?.data?.[focusedMatrixIndex];
-
+  
   const animate = async () => {
     setFocusedMatrixIndex(0);
     setIsAnimating(true);
-    for (let i = 0; i < matrices.length; i++) {
+    
+    for (let i = 0; i < matrices?.data?.length; i++) {
       await new Promise((resolve) => {
         setTimeout(() => {
           setFocusedMatrixIndex(i);
@@ -39,6 +39,8 @@ export const MatrixProvider = ({ children }) => {
     if(!loadedMatrics || !loadedMatrics.data) {
       return;
     }
+    
+    // setMatrices(loadedMatrics);
     setMatrices(loadedMatrics);
   }
 

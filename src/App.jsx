@@ -30,18 +30,19 @@ const darkTheme = createTheme({
   },
 });
 
-const FrameBar = () => {
+export const FrameBar = ({isMobile}) => {
   return (
     <AppBar position="fixed" sx={{ top: "auto", bottom: 0 }}>
       <Toolbar
         sx={{
           top: "auto",
           bottom: 0,
-          height: "200px",
+          // height: isMobile ? 100 : 200,
+          height: 200,
           overflowX: "scroll",
         }}
       >
-        <Frames />
+        <Frames isMobile={isMobile} />
       </Toolbar>
     </AppBar>
   );
@@ -60,16 +61,19 @@ const SideBar = ({ handleCodeToggle, handleColorCodeToggle, displayState }) => {
       container
       item
       direction="cell"
+      id="gridpapertop"
       sx={{
+        
         width: "250px",
         position: "fixed",
         height: "100vh",
         left: 0,
         top: 0,
         zIndex: 1,
+        
       }}
     >
-      <Paper sx={{ minHeight: "100vh", width: "20vw" }} elevation={1}>
+      <Paper sx={{ minHeight: "100vh", width: "20vw" }} elevation={1} id="papertop">
         <Grid container  justifyContent="space-between" id="top">
           <Grid container direction="column" alignItems="center" id="second" spacing={1}>
             
@@ -319,6 +323,7 @@ const hexToRgb = (hex) => {
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { SaveButtonModal } from "./components/save/Save";
 import { LoadButtonModal } from "./components/load/Load";
+import { NewApp } from "./NewApp";
 
 export const ColorPaletteCodeDisplay = () => {
   const { colorPalette } = useColorSelector();
@@ -387,7 +392,8 @@ const App = () => {
       <ColorSelectorProvider>
         <CssBaseline />
         <MatrixProvider>
-          <Grid spacontainer sx={{ minHeight: "100vh", width: "100vw" }}>
+          <NewApp />
+          {/* <Grid spacontainer sx={{ height: "100vh", width: "100vw" }}>
             <Grid
               item
               sx={{
@@ -395,6 +401,8 @@ const App = () => {
                 flexGrow: 1,
                 display: "flex",
                 padding: "20px",
+                overflow: "scroll",
+                id:"sidebar-grid",
               }}
             >
               <SideBar
@@ -421,7 +429,7 @@ const App = () => {
             </Grid>
             
           </Grid>
-          <FrameBar />
+          <FrameBar /> */}
         </MatrixProvider>
       </ColorSelectorProvider>
     </ThemeProvider>

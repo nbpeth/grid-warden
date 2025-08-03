@@ -3,7 +3,7 @@ import { useColorSelector } from "../../hooks/useColorSelector";
 import { useMatrixProvider } from "../../hooks/useMatrixProvider";
 import { emptyCellColor } from "../cell/Cell";
 
-export const ThumbnailCell = ({ x, y, id, i }) => {
+export const ThumbnailCell = ({ x, y, id, i, isMobile }) => {
   const { colorPalette } = useColorSelector();
   const [backgroundColor, setBackgroundColor] = useState(emptyCellColor);
   const { getMatrixAtPosition, matrices } = useMatrixProvider();
